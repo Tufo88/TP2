@@ -19,7 +19,7 @@ public class Wolf extends Animal {
 	
 	public Wolf(SelectionStrategy mate_strategy, SelectionStrategy hunting_strategy,
 			Vector2D pos) throws Exception {
-		super("paquito", _INITIAL_DIET,_INITIAL_SIGHT, _INITIAL_SPEED, mate_strategy, pos);
+		super("Wolfangkillers", _INITIAL_DIET,_INITIAL_SIGHT, _INITIAL_SPEED, mate_strategy, pos);
 		
 		_hunting_strategy = hunting_strategy;
 		_hunt_target = null;
@@ -29,7 +29,7 @@ public class Wolf extends Animal {
 	@Override
 	public void update(double dt) {
 		
-		if (_state == State.NORMAL) {
+		if (_state == State.NORMAL) { //1
 			if (_pos.distanceTo(_dest) < _REACH_DEST_DIST) {
 				_dest = Vector2D.get_random_vector(0, 243);
 			}
@@ -44,6 +44,20 @@ public class Wolf extends Animal {
 						_MAX_DESIRE - _desire : 
 						_DESIRE_INCREASE_COEF * dt);
 		}
+		
+		
+		
+		//pos update
+		//if (this.isOutOfBounds()) _dest = Vector2D.get_random_vector(0, 243);
+		int width = 800;
+		int height = 600;
+		double x = this.get_position().getX(), y = this.get_position().getY();
+		while (x >= width) x = (x - width);
+		while (x < 0) x = (x + width);
+		while (y >= height) y = (y - height);
+		while (y < 0) y = (y + height);
+
+		
 		
 	}
 

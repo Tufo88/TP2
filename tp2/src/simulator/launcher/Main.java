@@ -14,6 +14,18 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import simulator.misc.Utils;
+import simulator.misc.Vector2D;
+import simulator.model.Animal;
+import simulator.model.AnimalInfo;
+import simulator.model.SelectionStrategy;
+import simulator.model.Sheep;
+import simulator.model.Wolf;
+import simulator.view.SimpleObjectViewer;
+import simulator.view.SimpleObjectViewer.ObjInfo;
+
+import java.util.List;
+import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -151,15 +163,54 @@ public class Main {
 			break;
 		}
 	}
+	
+	private static List<ObjInfo> to_animals_info(List<? extends AnimalInfo> animals) {
+		List<ObjInfo> ol = new ArrayList<>(animals.size());
+		for (AnimalInfo a : animals)
+			ol.add(new ObjInfo(a.get_genetic_code(),
+				   (int) a.get_position().getX(),
+				   (int) a.get_position().getY(), 8));
+												//(int)Math.round(a.get_age())+2
+		return ol;
+	}
 
 	public static void main(String[] args) {
 		Utils._rand.setSeed(2147483647l);
+		
+		List<Animal> l = new LinkedList<>();
 		try {
+			for (int i = 0; i < 5; i++)
+			l.add(new Sheep(null, null, Vector2D.get_random_vector(0, 600)));
+			for (int i = 0; i < 1; i++)
+			l.add(new Wolf(null, null, Vector2D.get_random_vector(0, 600)));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		SimpleObjectViewer view = new SimpleObjectViewer("eco", 800, 600, 20, 15);
+		
+		double dt = 0.003;
+		double time = 0.0;
+		while (time<10) {
+			time += dt;
+			
+			for( Animal a : l ) {
+				List<ObjInfo> lObj = to_animals_info(l); 
+				a.update(dt);
+				view.update(lObj, time, dt);
+				System.out.println(a.get_diet().toString() +  a.get_position());
+				
+			}
+			
+
+		}
+		
+		/*try {
 			start(args);
 		} catch (Exception e) {
 			System.err.println("Something went wrong ...");
 			System.err.println();
 			e.printStackTrace();
-		}
+		}*/
 	}
 }

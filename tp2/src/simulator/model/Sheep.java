@@ -19,7 +19,7 @@ public class Sheep extends Animal {
 	
 	public Sheep(SelectionStrategy mate_strategy, SelectionStrategy danger_strategy,
 			Vector2D pos) throws Exception {
-		super("paco", _INITIAL_DIET,_INITIAL_SIGHT, _INITIAL_SPEED, mate_strategy, pos);
+		super("Sheep", _INITIAL_DIET,_INITIAL_SIGHT, _INITIAL_SPEED, mate_strategy, pos);
 		
 		_danger_strategy = danger_strategy;
 		_danger_source = null;
@@ -29,7 +29,7 @@ public class Sheep extends Animal {
 	@Override
 	public void update(double dt) {
 		
-		if (_state == State.NORMAL) {
+		if (_state == State.NORMAL) { //1
 			if (_pos.distanceTo(_dest) < _REACH_DEST_DIST) {
 				_dest = Vector2D.get_random_vector(0, 243);
 			}

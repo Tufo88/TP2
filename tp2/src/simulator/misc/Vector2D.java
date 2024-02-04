@@ -23,6 +23,10 @@ public class Vector2D {
 		_x = x;
 		_y = y;
 	}
+	
+	public boolean isInsideRectangle(int x1, int x2, int y1, int y2) { //xi anchura yi altura
+		return _x < x2 && _x > x1 && _y < y2 && _y > y1; 
+	}
 
 	// return the inner product of this Vector a and b
 	public double dot(Vector2D that) {
