@@ -192,7 +192,6 @@ public class Main {
 		double dt = 0.003;
 		double time = 0.0;
 		while (time<10) {
-			time += dt;
 			
 			for( Animal a : l ) {
 				List<ObjInfo> lObj = to_animals_info(l); 
@@ -202,6 +201,7 @@ public class Main {
 				
 			}
 			
+			time += dt;
 
 		}
 		

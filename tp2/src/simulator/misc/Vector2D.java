@@ -116,6 +116,15 @@ public class Vector2D {
 		return new Vector2D(x, y);
 	}
 
+	public static Vector2D adjust_vector(Vector2D vector, int width, int height) {
+		Vector2D newVector = new Vector2D(vector);
+		while (newVector._x >= width) newVector._x = (newVector._x - width);
+		while (newVector._x < 0) newVector._x = (newVector._x + width);
+		while (newVector._y >= height) newVector._y = (newVector._y - height);
+		while (newVector._y < 0) newVector._y = (newVector._y + height);
+		return newVector;
+	}
+	
 	public JSONArray asJSONArray() {
 		JSONArray a = new JSONArray();
 		a.put(_x);
