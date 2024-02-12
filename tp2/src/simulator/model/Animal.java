@@ -7,6 +7,8 @@ import simulator.misc.Vector2D;
 
 public abstract class Animal implements Entity, AnimalInfo {
 	
+	private static final double _NEW_BABY_PROBABILITY = 0.9;
+
 	static final double _SCALE_FACTOR = 60.0;
 
 	static final double _RANDOM_TOLERANCE = 0.2;
@@ -22,7 +24,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 	static final double _MIN_DESIRE = 0;
 
 	static final double _MAX_DESIRE = 100.0;
-	
+
 	String _genetic_code;
 	Diet _diet;
 	State _state;
@@ -181,14 +183,19 @@ public abstract class Animal implements Entity, AnimalInfo {
 		return _pos.distanceTo(a._pos) <= _sight_range;
 	}
 	
-	protected void modoSexo(Animal a) {
-		_desire = a._desire = _MIN_DESIRE;
-		if (_baby == null && ) {
-		
+	protected void matingLogic() {
+		_desire = _mate_target._desire = _MIN_DESIRE;
+		if (_baby == null && Utils._rand.nextDouble() < _NEW_BABY_PROBABILITY) {
+			_baby = generateDescendency();
 		}
+		_mate_target = null;
 	}
-	
+
+
 	@Override
 	public abstract void update(double dt);
 
+	protected abstract Animal generateDescendency();
+	
+	public abstract void updateState();
 }
