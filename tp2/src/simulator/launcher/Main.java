@@ -142,7 +142,6 @@ public class Main {
 		return new JSONObject(new JSONTokener(in));
 	}
 
-
 	private static void start_batch_mode() throws Exception {
 		InputStream is = new FileInputStream(new File(_in_file));
 	}
@@ -163,54 +162,50 @@ public class Main {
 			break;
 		}
 	}
-	
+
 	private static List<ObjInfo> to_animals_info(List<? extends AnimalInfo> animals) {
 		List<ObjInfo> ol = new ArrayList<>(animals.size());
 		for (AnimalInfo a : animals)
-			ol.add(new ObjInfo(a.get_genetic_code(),
-				   (int) a.get_position().getX(),
-				   (int) a.get_position().getY(), 8));
-												//(int)Math.round(a.get_age())+2
+			ol.add(new ObjInfo(a.get_genetic_code(), (int) a.get_position().getX(), (int) a.get_position().getY(), 8));
+		// (int)Math.round(a.get_age())+2
 		return ol;
 	}
 
 	public static void main(String[] args) {
 		Utils._rand.setSeed(2147483647l);
-		
+
 		List<Animal> l = new LinkedList<>();
 		try {
 			for (int i = 0; i < 5; i++)
-			l.add(new Sheep(null, null, Vector2D.get_random_vector(0, 600)));
+				l.add(new Sheep(null, null, Vector2D.get_random_vector(0, 600)));
 			for (int i = 0; i < 1; i++)
-			l.add(new Wolf(null, null, Vector2D.get_random_vector(0, 600)));
+				l.add(new Wolf(null, null, Vector2D.get_random_vector(0, 600)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		SimpleObjectViewer view = new SimpleObjectViewer("eco", 800, 600, 20, 15);
-		
+
 		double dt = 0.003;
 		double time = 0.0;
-		while (time<10) {
-			
-			for( Animal a : l ) {
-				List<ObjInfo> lObj = to_animals_info(l); 
+		while (time < 10) {
+
+			for (Animal a : l) {
+				List<ObjInfo> lObj = to_animals_info(l);
 				a.update(dt);
 				view.update(lObj, time, dt);
-				System.out.println(a.get_diet().toString() +  a.get_position());
-				
+				System.out.println(a.get_diet().toString() + a.get_position());
+
 			}
-			
+
 			time += dt;
 
 		}
-		
-		/*try {
-			start(args);
-		} catch (Exception e) {
-			System.err.println("Something went wrong ...");
-			System.err.println();
-			e.printStackTrace();
-		}*/
+
+		/*
+		 * try { start(args); } catch (Exception e) {
+		 * System.err.println("Something went wrong ..."); System.err.println();
+		 * e.printStackTrace(); }
+		 */
 	}
 }

@@ -6,8 +6,8 @@ import simulator.misc.Utils;
 import simulator.misc.Vector2D;
 
 public abstract class Animal implements Entity, AnimalInfo {
-	
-	private static final double _NEW_BABY_PROBABILITY = 0.9;
+
+	static final double _NEW_BABY_PROBABILITY = 0.9;
 
 	static final double _SCALE_FACTOR = 60.0;
 
@@ -20,7 +20,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 	static final double _MIN_ENERGY = 0;
 
 	static final double _MAX_ENERGY = 100.0;
-	
+
 	static final double _MIN_DESIRE = 0;
 
 	static final double _MAX_DESIRE = 100.0;
@@ -39,22 +39,24 @@ public abstract class Animal implements Entity, AnimalInfo {
 	Animal _baby;
 	AnimalMapView _region_mngr;
 	SelectionStrategy _mate_strategy;
-	
-	protected Animal(String genetic_code, Diet diet, double sight_range, 
-			double init_speed, SelectionStrategy mate_strategy, Vector2D pos) throws Exception {
-		/*if(genetic_code.equals("") || sight_range < 0 || init_speed < 0 || mate_strategy == null) 
-			throw new Exception("A");*/
-		
+
+	protected Animal(String genetic_code, Diet diet, double sight_range, double init_speed,
+			SelectionStrategy mate_strategy, Vector2D pos) throws Exception {
+		/*
+		 * if(genetic_code.equals("") || sight_range < 0 || init_speed < 0 ||
+		 * mate_strategy == null) throw new Exception("A");
+		 */
+
 		_genetic_code = genetic_code;
 		_diet = diet;
 		_sight_range = sight_range;
 		_speed = Utils.get_randomized_parameter(init_speed, Animal._RANDOM_SPEED_TOLERANCE);
-		_mate_strategy= mate_strategy;
+		_mate_strategy = mate_strategy;
 		_pos = pos;
 		_state = State.NORMAL;
 		_energy = _INITIAL_ENERGY;
 		_desire = 0;
-		//_dest = null;
+		// _dest = null;
 		double x = Utils._rand.nextDouble(800);
 		double y = Utils._rand.nextDouble(600);
 		Vector2D v = new Vector2D(x, y);
@@ -63,7 +65,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 		_baby = null;
 		_region_mngr = null;
 	}
-	
+
 	protected Animal(Animal p1, Animal p2) {
 		_dest = null;
 		_baby = null;
@@ -74,49 +76,44 @@ public abstract class Animal implements Entity, AnimalInfo {
 		_genetic_code = p1._genetic_code;
 		_diet = p1._diet;
 		_energy = (p1._energy + p2._energy) / 2;
-		_pos = p1.get_position().plus(Vector2D.get_random_vector(-1,1).scale(_SCALE_FACTOR*(Utils._rand
-				.nextGaussian()+1)));
-		_sight_range = Utils.
-				get_randomized_parameter(
-				(p1.get_sight_range()+p2.get_sight_range())/2, Animal._RANDOM_TOLERANCE);
-		_speed = Utils.
-				get_randomized_parameter(
-				(p1.get_speed()+p2.get_speed())/2, Animal._RANDOM_TOLERANCE);		
+		_pos = p1.get_position()
+				.plus(Vector2D.get_random_vector(-1, 1).scale(_SCALE_FACTOR * (Utils._rand.nextGaussian() + 1)));
+		_sight_range = Utils.get_randomized_parameter((p1.get_sight_range() + p2.get_sight_range()) / 2,
+				Animal._RANDOM_TOLERANCE);
+		_speed = Utils.get_randomized_parameter((p1.get_speed() + p2.get_speed()) / 2, Animal._RANDOM_TOLERANCE);
 	}
-	
+
 	void init(AnimalMapView reg_mngr) {
-		
+
 		_region_mngr = reg_mngr;
 		if (_pos == null) {
-			_pos = Vector2D.get_random_vector(_region_mngr.get_width()  -1, _region_mngr.get_height() - 1);
+			_pos = Vector2D.get_random_vector(_region_mngr.get_width() - 1, _region_mngr.get_height() - 1);
 		} else {
-			_pos = Vector2D.adjust_vector(_pos, _region_mngr.get_width()  -1, _region_mngr.get_height() - 1);
+			_pos = Vector2D.adjust_vector(_pos, _region_mngr.get_width() - 1, _region_mngr.get_height() - 1);
 		}
-		_dest = Vector2D.get_random_vector(_region_mngr.get_width()  -1, _region_mngr.get_height() - 1);
-		
+		_dest = Vector2D.get_random_vector(_region_mngr.get_width() - 1, _region_mngr.get_height() - 1);
+
 	}
-	
+
 	Animal deliver_baby() {
 		Animal a = _baby;
 		_baby = null;
 		return a;
 	}
 
-	
 	protected void move(double speed) {
 		_pos = _pos.plus(_dest.minus(_pos).direction().scale(speed));
 	}
-	
+
 	public JSONObject as_JSON() {
-		return new JSONObject().put("pos", _pos.toString())
-				.put("gcode", _genetic_code)
-				.put("diet", _diet.toString())
+		return new JSONObject().put("pos", _pos.toString()).put("gcode", _genetic_code).put("diet", _diet.toString())
 				.put("state", _state.toString());
 	}
+
 	protected final boolean isOutOfBounds() {
 		return _pos.isInsideRectangle(0, 800, 0, 600);
 	}
-	
+
 	@Override
 	public State get_state() {
 		return _state;
@@ -164,25 +161,24 @@ public abstract class Animal implements Entity, AnimalInfo {
 
 	@Override
 	public boolean is_pregnant() {
-		// TODO Auto-generated method stub
-		return false;
+		return _baby != null;
 	}
 
 	protected void updateEnergy(double x) {
 		_energy += x;
 		_energy = Utils.constrain_value_in_range(_energy, _MIN_ENERGY, _MAX_ENERGY);
-		
+
 	}
-	
+
 	protected void updateDesire(double x) {
 		_desire += x;
 		_desire = Utils.constrain_value_in_range(_desire, _MIN_DESIRE, _MAX_DESIRE);
 	}
-	
+
 	protected boolean isInSight(Animal a) {
 		return _pos.distanceTo(a._pos) <= _sight_range;
 	}
-	
+
 	protected void matingLogic() {
 		_desire = _mate_target._desire = _MIN_DESIRE;
 		if (_baby == null && Utils._rand.nextDouble() < _NEW_BABY_PROBABILITY) {
@@ -191,11 +187,14 @@ public abstract class Animal implements Entity, AnimalInfo {
 		_mate_target = null;
 	}
 
-
 	@Override
 	public abstract void update(double dt);
 
 	protected abstract Animal generateDescendency();
-	
+
 	public abstract void updateState();
+
+	public boolean is_dead() {
+		return _state == State.DEAD;
+	}
 }
