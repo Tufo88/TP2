@@ -58,7 +58,7 @@ public class RegionManager implements AnimalMapView {
 	}
 
 	private Region getRegionFromAnimal(Animal a) {
-		return _regions.get((int) a._pos.getY() / _region_height).get((int) a._pos.getX() / _region_width);
+		return _regions.get((int) a.get_position().getY() / _region_height).get((int) a.get_position().getX() / _region_width);
 	}
 
 	void register_animal(Animal a) {
@@ -135,10 +135,10 @@ public class RegionManager implements AnimalMapView {
 	@Override
 	public List<Animal> get_animals_in_range(Animal e, Predicate<Animal> filter) {
 		int i = 0, j = 0;
-		int regActI = (int) e._pos.getY() / _region_height;
-		int regActJ = (int) e._pos.getX() / _region_width;
-		int maxRangeI = (int) e._sight_range / _region_height;
-		int maxRangeJ = (int) e._sight_range / _region_width;
+		int regActI = (int) e.get_position().getY() / _region_height;
+		int regActJ = (int) e.get_position().getX() / _region_width;
+		int maxRangeI = (int) e.get_sight_range() / _region_height;
+		int maxRangeJ = (int) e.get_sight_range() / _region_width;
 
 		List<Animal> a = new ArrayList<Animal>();
 		for (List<Region> row : _regions) {

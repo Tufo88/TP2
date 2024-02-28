@@ -36,21 +36,21 @@ public class Sheep extends Animal {
 
 	@Override
 	public void update(double dt) {
-		if (_state == State.DEAD)
+		if (this.get_state() == State.DEAD)
 			return;
 
-		if (_state == State.NORMAL) { // 1
+		if (this.get_state() == State.NORMAL) { // 1
 			normal_state_update(dt);
 		}
 
-		else if (_state == State.DANGER) {
-			if (_danger_source != null && _danger_source._state == State.DEAD)
+		else if (this.get_state()  == State.DANGER) {
+			if (_danger_source != null && _danger_source.get_state() == State.DEAD)
 				_danger_source = null;
 			if (_danger_source == null) {
 				normal_state_update(dt);
 			} else {
-				_pos.plus(_pos.minus(_danger_source.get_position()).direction());
-				move(_SPEED_FACTOR * _speed * dt * Math.exp((_energy - _MAX_ENERGY) * _ENERGY_COEF));
+				_dest = _pos.plus(_pos.minus(_danger_source.get_position()).direction());
+				move(_SPEED_FACTOR * this.get_speed() * dt * Math.exp((this.get_energy() - _MAX_ENERGY) * _ENERGY_COEF));
 				_age += dt;
 				updateEnergy(-_ENERGY_DECREASE_COEF * _ENERGY_DANGER_COEF * dt);
 				updateDesire(_DESIRE_INCREASE_COEF * dt);
@@ -58,20 +58,20 @@ public class Sheep extends Animal {
 		}
 
 		else if (_state == State.MATE) {
-			if (_mate_target != null && (_mate_target._state == State.DEAD || !isInSight(_mate_target)))
+			if (_mate_target != null && (_mate_target.get_state() == State.DEAD || !isInSight(_mate_target)))
 				_mate_target = null;
 			if (_mate_target == null) {
 				_mate_target = _mate_strategy.select(this,
-						_region_mngr.get_animals_in_range(this, (Animal a) -> a._diet == Diet.HERVIBORE));
+						_region_mngr.get_animals_in_range(this, (Animal a) -> a.get_diet() == Diet.HERVIBORE));
 				if (_mate_target == null)
 					normal_state_update(dt);
 				else {
 					_dest = _mate_target.get_position();
-					move(_SPEED_FACTOR * _speed * dt * Math.exp((_energy - _MAX_ENERGY) * _ENERGY_COEF));
+					move(_SPEED_FACTOR * this.get_speed() * dt * Math.exp((this.get_energy() - _MAX_ENERGY) * _ENERGY_COEF));
 					_age += dt;
 					updateEnergy(-_ENERGY_DECREASE_COEF * _ENERGY_MATE_COEF * dt);
 					updateDesire(_DESIRE_INCREASE_COEF * dt);
-					if (_pos.distanceTo(_dest) < _REACH_DEST_DIST) {
+					if (this.get_position().distanceTo(this.get_destination()) < _REACH_DEST_DIST) {
 						matingLogic();
 					}
 				}
@@ -85,7 +85,7 @@ public class Sheep extends Animal {
 	public void updateState() {
 		if (_danger_source == null || !isInSight(_danger_source)) {
 			_danger_source = _danger_strategy.select(this,
-					_region_mngr.get_animals_in_range(this, (Animal a) -> a._diet == Diet.CARNIVORE));
+					_region_mngr.get_animals_in_range(this, (Animal a) -> a.get_diet() == Diet.CARNIVORE));
 		}
 		if (_danger_source != null) {
 			_state = State.DANGER;
@@ -96,11 +96,11 @@ public class Sheep extends Animal {
 	}
 
 	private void normal_state_update(double dt) {
-		if (_pos.distanceTo(_dest) < _REACH_DEST_DIST) {
+		if (this.get_position().distanceTo(this.get_destination()) < _REACH_DEST_DIST) {
 			_dest = Vector2D.get_random_vector(0, 243);
 		}
 
-		this.move(_speed * dt * Math.exp((_energy - Animal._INITIAL_ENERGY) * _ENERGY_COEF));
+		this.move(this.get_speed() * dt * Math.exp((this.get_energy() - Animal._INITIAL_ENERGY) * _ENERGY_COEF));
 		_age += dt;
 
 		updateEnergy(-_ENERGY_DECREASE_COEF * dt);

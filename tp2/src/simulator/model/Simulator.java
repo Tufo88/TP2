@@ -80,4 +80,9 @@ public class Simulator implements JSONable {
 		_animals.addAll(newAnimals);
 		_reg_mngr.update_all_regions(dt);
 	}
+	
+	@Override
+	public JSONObject as_JSON() {
+		return new JSONObject().append("time", _dt).append("state", _reg_mngr.as_JSON());
+	}
 }

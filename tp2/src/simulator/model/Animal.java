@@ -156,7 +156,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 
 	@Override
 	public Vector2D get_destination() {
-		return _dest; // hay que pasar copia o referencia ??
+		return new Vector2D(_dest); 
 	}
 
 	@Override

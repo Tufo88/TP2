@@ -136,6 +136,7 @@ public class Main {
 	}
 
 	private static void init_factories() {
+		Factory<
 	}
 
 	private static JSONObject load_JSON_file(InputStream in) {
@@ -163,13 +164,6 @@ public class Main {
 		}
 	}
 
-	private static List<ObjInfo> to_animals_info(List<? extends AnimalInfo> animals) {
-		List<ObjInfo> ol = new ArrayList<>(animals.size());
-		for (AnimalInfo a : animals)
-			ol.add(new ObjInfo(a.get_genetic_code(), (int) a.get_position().getX(), (int) a.get_position().getY(), 8));
-		// (int)Math.round(a.get_age())+2
-		return ol;
-	}
 
 	public static void main(String[] args) {
 		Utils._rand.setSeed(2147483647l);
@@ -191,7 +185,6 @@ public class Main {
 		while (time < 10) {
 
 			for (Animal a : l) {
-				List<ObjInfo> lObj = to_animals_info(l);
 				a.update(dt);
 				view.update(lObj, time, dt);
 				System.out.println(a.get_diet().toString() + a.get_position());
