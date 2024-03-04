@@ -44,9 +44,7 @@ public class Controller {
 				}
 			}
 
-		} else {
-			//TODO
-		}
+		} 
 
 		JSONArray animals = data.getJSONArray("animals");
 		for (Object obj : animals) {
@@ -77,7 +75,7 @@ public class Controller {
 			view.close();
 		obj.append("out", _sim.as_JSON());
 		PrintStream p = new PrintStream(out);
-		p.println(obj);
+		p.println(obj.toString());
 
 	}
 
@@ -85,7 +83,7 @@ public class Controller {
 
 		List<ObjInfo> ol = new ArrayList<>(animals.size());
 		for (AnimalInfo a : animals)
-			ol.add(new ObjInfo(a.get_genetic_code(), (int) a.get_position().getX(), (int) a.get_position().getY(), 8));
+			ol.add(new ObjInfo(a.get_genetic_code(), (int) a.get_position().getX(), (int) a.get_position().getY(), (int) Math.round(a.get_age())+2));
 		return ol;
 	}
 

@@ -71,6 +71,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 		_desire = 0.0;
 		_genetic_code = p1._genetic_code;
 		_diet = p1._diet;
+		_mate_strategy = p2._mate_strategy;
 		_energy = (p1._energy + p2._energy) / 2;
 		_pos = p1.get_position()
 				.plus(Vector2D.get_random_vector(-1, 1).scale(_SCALE_FACTOR * (Utils._rand.nextGaussian() + 1)));
@@ -83,14 +84,20 @@ public abstract class Animal implements Entity, AnimalInfo {
 
 		_region_mngr = reg_mngr;
 		if (_pos == null) {
-			_pos = Vector2D.get_random_vector(0, _region_mngr.get_width() - 1, 0, _region_mngr.get_height() - 1);
+			_pos = Vector2D.get_random_vector(0, _region_mngr.get_width(), 0, _region_mngr.get_height());
 		} else {
-			_pos = Vector2D.adjust_vector(_pos, _region_mngr.get_width() - 1, _region_mngr.get_height() - 1);
+			_pos = Vector2D.adjust_vector(_pos, _region_mngr.get_width(), _region_mngr.get_height());
 		}
-		_dest = Vector2D.get_random_vector(0, _region_mngr.get_width() - 1, 0, _region_mngr.get_height() - 1);
+		changeRandomDest();
 
 	}
-
+	
+	boolean isInMap() {
+		return _pos.isInsideRectangle(0, _region_mngr.get_width(), 0, _region_mngr.get_height());
+	}
+	void changeRandomDest() {
+		_dest = Vector2D.get_random_vector(0, _region_mngr.get_width(), 0, _region_mngr.get_height());
+	}
 	Animal deliver_baby() {
 		Animal a = _baby;
 		_baby = null;
@@ -160,6 +167,9 @@ public abstract class Animal implements Entity, AnimalInfo {
 		return _baby != null;
 	}
 
+	void setDesire(double x) {
+		_desire = x;
+	}
 	protected void updateEnergy(double x) {
 		_energy += x;
 		_energy = Utils.constrain_value_in_range(_energy, _MIN_ENERGY, _MAX_ENERGY);
@@ -176,10 +186,13 @@ public abstract class Animal implements Entity, AnimalInfo {
 	}
 
 	protected void matingLogic() {
-		_desire = _mate_target._desire = _MIN_DESIRE;
+		setDesire(_MIN_DESIRE);
+		_mate_target.setDesire(_MIN_DESIRE);
+		
 		if (_baby == null && Utils._rand.nextDouble() < _NEW_BABY_PROBABILITY) {
 			_baby = generateDescendency();
 		}
+
 		_mate_target = null;
 	}
 

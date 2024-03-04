@@ -216,7 +216,7 @@ public class Main {
 		JSONObject input = load_JSON_file(is);
 
 		OutputStream os = new FileOutputStream(new File(_out_file));
-		Simulator so = new Simulator(input.getInt("rows"), input.getInt("cols"), input.getInt("width"),
+		Simulator so = new Simulator(input.getInt("cols"), input.getInt("rows"), input.getInt("width"),
 				input.getInt("height"), animal_factory, region_factory);
 		Controller co = new Controller(so);
 		co.load_data(input);

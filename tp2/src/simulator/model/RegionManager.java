@@ -25,12 +25,15 @@ public class RegionManager implements AnimalMapView {
 	public RegionManager(int cols, int rows, int width, int height) {
 		this._cols = cols;
 		this._rows = rows;
-		this._height = height;
-		this._width = width;
-
-		this._region_width = this._width / this._cols;
-		this._region_height = this._height / this._rows;
-
+		
+		this._region_width = width / this._cols;
+		this._region_height = height / this._rows;
+		
+		this._height = this._region_height * this._rows;
+		this._width = this._region_width * this._cols;
+		
+//		if(this._width % this._cols != 0) this._cols++;
+//		if(this._height % this._rows != 0) this._rows++;
 		initRegions();
 
 		this._animal_region = new HashMap<Animal, Region>();
@@ -152,7 +155,7 @@ public class RegionManager implements AnimalMapView {
 			for (Region r : row) {
 				if (i <= regActI + maxRangeI && i >= regActI - maxRangeI && j <= regActJ + maxRangeJ
 						&& j >= regActJ - maxRangeJ) {
-					a.addAll(r.getAnimals((Animal b) -> e.isInSight(b) && filter.test(b)));
+					a.addAll(r.getAnimals((Animal b) -> e.isInSight(b) && !e.equals(b) && filter.test(b)));
 				}
 				j++;
 			}
@@ -164,7 +167,7 @@ public class RegionManager implements AnimalMapView {
 
 	@Override
 	public JSONObject as_JSON() {
-		// TODO:
+		
 		JSONObject obj = new JSONObject().append("regiones", new JSONArray());
 		int i = 0, j = 0;
 		for (List<Region> row : _regions) {
