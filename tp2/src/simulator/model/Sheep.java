@@ -20,7 +20,7 @@ public class Sheep extends Animal {
 	Animal _danger_source;
 	SelectionStrategy _danger_strategy;
 
-	public Sheep(SelectionStrategy mate_strategy, SelectionStrategy danger_strategy, Vector2D pos) throws Exception {
+	public Sheep(SelectionStrategy mate_strategy, SelectionStrategy danger_strategy, Vector2D pos) throws IllegalArgumentException {
 		super("Sheep", _INITIAL_DIET, _INITIAL_SIGHT, _INITIAL_SPEED, mate_strategy, pos);
 
 		_danger_strategy = danger_strategy;

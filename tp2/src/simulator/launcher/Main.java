@@ -2,7 +2,9 @@ package simulator.launcher;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -13,18 +15,25 @@ import org.apache.commons.cli.ParseException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import simulator.factories.BuilderBasedFactory;
+import simulator.factories.DefaultRegionBuilder;
+import simulator.factories.DynamicSupplyRegionBuilder;
+import simulator.factories.Factory;
+import simulator.control.Controller;
+import simulator.factories.Builder;
+import simulator.factories.SelectClosestBuilder;
+import simulator.factories.SelectFirstBuilder;
+import simulator.factories.SelectYoungestBuilder;
+import simulator.factories.SheepBuilder;
+import simulator.factories.WolfBuilder;
 import simulator.misc.Utils;
-import simulator.misc.Vector2D;
+
 import simulator.model.Animal;
-import simulator.model.AnimalInfo;
+import simulator.model.Region;
 import simulator.model.SelectionStrategy;
-import simulator.model.Sheep;
-import simulator.model.Wolf;
-import simulator.view.SimpleObjectViewer;
-import simulator.view.SimpleObjectViewer.ObjInfo;
+import simulator.model.Simulator;
 
 import java.util.List;
-import java.util.LinkedList;
 import java.util.ArrayList;
 
 public class Main {
@@ -52,12 +61,18 @@ public class Main {
 	// default values for some parameters
 	//
 	private final static Double _default_time = 10.0; // in seconds
-
+	private final static Double _default_dt = 0.03;
 	// some attributes to stores values corresponding to command-line parameters
 	//
 	private static Double _time = null;
 	private static String _in_file = null;
+	private static String _out_file = null;
 	private static ExecMode _mode = ExecMode.BATCH;
+	private static Double _dt = null;
+	private static boolean _sv = false;
+	static Factory<SelectionStrategy> selection_strategy_factory;
+	static Factory<Region> region_factory;
+	static Factory<Animal> animal_factory;
 
 	private static void parse_args(String[] args) {
 
@@ -73,7 +88,9 @@ public class Main {
 			parse_help_option(line, cmdLineOptions);
 			parse_in_file_option(line);
 			parse_time_option(line);
-
+			parse_out_file_option(line);
+			parse_dt_option(line);
+			parse_sv_option(line);
 			// if there are some remaining arguments, then something wrong is
 			// provided in the command line!
 			//
@@ -101,6 +118,16 @@ public class Main {
 		// input file
 		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg().desc("A configuration file.").build());
 
+		// output file
+		cmdLineOptions.addOption(
+				Option.builder("o").longOpt("output").hasArg().desc("Output file, where output is written.").build());
+
+		cmdLineOptions.addOption(
+				Option.builder("sv").longOpt("simple-viewer").desc("Show the viewer window in console mode.").build());
+
+		cmdLineOptions.addOption(
+				Option.builder("dt").longOpt("delta-time").hasArg().desc("A double representing actual time, in\n"
+						+ "seconds, per simulation step. Default value: " + _default_dt + ".").build());
 		// steps
 		cmdLineOptions.addOption(Option.builder("t").longOpt("time").hasArg()
 				.desc("An real number representing the total simulation time in seconds. Default value: "
@@ -125,6 +152,17 @@ public class Main {
 		}
 	}
 
+	private static void parse_out_file_option(CommandLine line) throws ParseException {
+		_out_file = line.getOptionValue("o");
+		if (_mode == ExecMode.BATCH && _out_file == null) {
+			throw new ParseException("In batch mode an output configuration file is required");
+		}
+	}
+
+	private static void parse_sv_option(CommandLine line) throws ParseException {
+		_sv = line.hasOption("sv");
+	}
+
 	private static void parse_time_option(CommandLine line) throws ParseException {
 		String t = line.getOptionValue("t", _default_time.toString());
 		try {
@@ -135,8 +173,37 @@ public class Main {
 		}
 	}
 
+	private static void parse_dt_option(CommandLine line) throws ParseException {
+		String dt = line.getOptionValue("dt", _default_dt.toString());
+		try {
+			_dt = Double.parseDouble(dt);
+			assert (_dt >= 0);
+		} catch (Exception e) {
+			throw new ParseException("Invalid value for time: " + dt);
+		}
+	}
+
 	private static void init_factories() {
-		Factory<
+		// SelectionStrategies
+		List<Builder<SelectionStrategy>> selection_strategy_builders = new ArrayList<>();
+		selection_strategy_builders.add(new SelectFirstBuilder());
+		selection_strategy_builders.add(new SelectClosestBuilder());
+		selection_strategy_builders.add(new SelectYoungestBuilder());
+
+		selection_strategy_factory = new BuilderBasedFactory<SelectionStrategy>(selection_strategy_builders);
+
+		List<Builder<Region>> region_builders = new ArrayList<>();
+		region_builders.add(new DefaultRegionBuilder());
+		region_builders.add(new DynamicSupplyRegionBuilder());
+
+		region_factory = new BuilderBasedFactory<Region>(region_builders);
+
+		List<Builder<Animal>> animal_builders = new ArrayList<>();
+		animal_builders.add(new SheepBuilder(selection_strategy_factory));
+		animal_builders.add(new WolfBuilder(selection_strategy_factory));
+
+		animal_factory = new BuilderBasedFactory<Animal>(animal_builders);
+
 	}
 
 	private static JSONObject load_JSON_file(InputStream in) {
@@ -144,7 +211,17 @@ public class Main {
 	}
 
 	private static void start_batch_mode() throws Exception {
+
 		InputStream is = new FileInputStream(new File(_in_file));
+		JSONObject input = load_JSON_file(is);
+
+		OutputStream os = new FileOutputStream(new File(_out_file));
+		Simulator so = new Simulator(input.getInt("rows"), input.getInt("cols"), input.getInt("width"),
+				input.getInt("height"), animal_factory, region_factory);
+		Controller co = new Controller(so);
+		co.load_data(input);
+		co.run(_time, _dt, _sv, os);
+		os.close();
 	}
 
 	private static void start_GUI_mode() throws Exception {
@@ -164,41 +241,16 @@ public class Main {
 		}
 	}
 
-
 	public static void main(String[] args) {
 		Utils._rand.setSeed(2147483647l);
 
-		List<Animal> l = new LinkedList<>();
 		try {
-			for (int i = 0; i < 5; i++)
-				l.add(new Sheep(null, null, Vector2D.get_random_vector(0, 600)));
-			for (int i = 0; i < 1; i++)
-				l.add(new Wolf(null, null, Vector2D.get_random_vector(0, 600)));
+			start(args);
 		} catch (Exception e) {
+			System.err.println("Something went wrong ...");
+			System.err.println();
 			e.printStackTrace();
 		}
 
-		SimpleObjectViewer view = new SimpleObjectViewer("eco", 800, 600, 20, 15);
-
-		double dt = 0.003;
-		double time = 0.0;
-		while (time < 10) {
-
-			for (Animal a : l) {
-				a.update(dt);
-				view.update(lObj, time, dt);
-				System.out.println(a.get_diet().toString() + a.get_position());
-
-			}
-
-			time += dt;
-
-		}
-
-		/*
-		 * try { start(args); } catch (Exception e) {
-		 * System.err.println("Something went wrong ..."); System.err.println();
-		 * e.printStackTrace(); }
-		 */
 	}
 }

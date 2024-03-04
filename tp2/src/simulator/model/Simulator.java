@@ -34,7 +34,8 @@ public class Simulator implements JSONable {
 
 	public void set_region(int row, int col, JSONObject r_json) {
 		Region r = null;
-		// TODO: Factory
+		
+		r = _regions_factory.create_instance(r_json);
 		this.set_region(row, col, r);
 	}
 
@@ -45,7 +46,7 @@ public class Simulator implements JSONable {
 	
 	public void add_animal(JSONObject a_json) {
 		Animal a = null;
-		// TODO: Factory
+		a = _animals_factory.create_instance(a_json);
 		this.add_animal(a);
 	}
 	
@@ -74,7 +75,11 @@ public class Simulator implements JSONable {
 			}
 			else {
 				a.update(dt);
-				if(a.is_pregnant()) newAnimals.add(a.deliver_baby());
+				if(a.is_pregnant()) {
+					Animal b = a.deliver_baby();
+					_reg_mngr.register_animal(b);
+					newAnimals.add(b);
+				}
 			}
 		}
 		_animals.addAll(newAnimals);

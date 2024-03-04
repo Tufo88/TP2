@@ -6,8 +6,8 @@ import simulator.model.SelectYoungest;
 import simulator.model.SelectionStrategy;
 
 public class SelectYoungestBuilder extends Builder<SelectionStrategy> {
-	public SelectYoungestBuilder(String type_tag) {
-		super(type_tag, "Select Youngest Strategy");
+	public SelectYoungestBuilder() {
+		super("youngest", "Select Youngest Strategy");
 		
 	}
 

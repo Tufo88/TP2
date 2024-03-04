@@ -8,14 +8,14 @@ import simulator.misc.Vector2D;
 import simulator.model.Animal;
 import simulator.model.SelectFirst;
 import simulator.model.SelectionStrategy;
-import simulator.model.Sheep;
+import simulator.model.Wolf;
 
-public class SheepBuilder extends Builder<Animal> {
+public class WolfBuilder extends Builder<Animal> {
 
 	Factory<SelectionStrategy> _ss_factory;
 
-	public SheepBuilder(Factory<SelectionStrategy> factory) {
-		super("sheep", "Sheep");
+	public WolfBuilder(Factory<SelectionStrategy> factory) {
+		super("wolf", "Wolf");
 		_ss_factory = factory;
 	}
 
@@ -23,15 +23,16 @@ public class SheepBuilder extends Builder<Animal> {
 	protected Animal create_instance(JSONObject data) throws IllegalArgumentException {
 
 		JSONObject _mate_strat = data.optJSONObject("mate_strategy");
-		JSONObject _danger_strat = data.optJSONObject("danger_strategy");
+		JSONObject _hunt_strat = data.optJSONObject("hunt_strategy");
 
 		SelectionStrategy mate_strategy = _mate_strat == null ? new SelectFirst()
 				: _ss_factory.create_instance(_mate_strat);
 
-		SelectionStrategy danger_strategy = _danger_strat == null ? new SelectFirst()
-				: _ss_factory.create_instance(_danger_strat);
+		SelectionStrategy hunt_strategy = _hunt_strat == null ? new SelectFirst()
+				: _ss_factory.create_instance(_hunt_strat);
 
 		JSONObject _pos = data.optJSONObject("pos");
+
 		Vector2D pos = null;
 		if(_pos != null) {
 			JSONArray _posX = _pos.getJSONArray("x_range");
@@ -40,7 +41,7 @@ public class SheepBuilder extends Builder<Animal> {
 					_posY.getDouble(1));
 		} 
 		
-		return new Sheep(mate_strategy, danger_strategy, pos);
+		return new Wolf(mate_strategy, hunt_strategy, pos);
 	}
 
 }

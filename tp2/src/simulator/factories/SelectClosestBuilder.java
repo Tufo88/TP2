@@ -6,8 +6,8 @@ import simulator.model.SelectClosest;
 import simulator.model.SelectionStrategy;
 
 public class SelectClosestBuilder extends Builder<SelectionStrategy> {
-	public SelectClosestBuilder(String type_tag) {
-		super(type_tag, "Select Closest Strategy");
+	public SelectClosestBuilder() {
+		super("closest", "Select Closest Strategy");
 		
 	}
 

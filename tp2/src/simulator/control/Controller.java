@@ -44,6 +44,8 @@ public class Controller {
 				}
 			}
 
+		} else {
+			//TODO
 		}
 
 		JSONArray animals = data.getJSONArray("animals");

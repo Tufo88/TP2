@@ -9,7 +9,7 @@ public class DynamicSupplyRegion extends Region {
 	double _food;
 	double _factor;
 
-	DynamicSupplyRegion(double foodAmount, double growRate) {
+	public DynamicSupplyRegion(double foodAmount, double growRate) {
 		_food = foodAmount;
 		_factor = growRate;
 	}

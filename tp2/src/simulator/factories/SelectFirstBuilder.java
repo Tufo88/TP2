@@ -7,8 +7,8 @@ import simulator.model.SelectionStrategy;
 
 public class SelectFirstBuilder extends Builder<SelectionStrategy> {
 
-	public SelectFirstBuilder(String type_tag) {
-		super(type_tag, "Select First Strategy");
+	public SelectFirstBuilder() {
+		super("first", "Select First Strategy");
 		
 	}
 

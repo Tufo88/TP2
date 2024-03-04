@@ -37,13 +37,20 @@ public class RegionManager implements AnimalMapView {
 	}
 
 	private void initRegions() {
-		_regions = new ArrayList<List<Region>>(this._height);
-		for (List<Region> row : _regions) {
-			row = new ArrayList<Region>(this._width);
-			for (Region reg : row) {
-				reg = new DefaultRegion();
+		_regions = new ArrayList<List<Region>>();
+		for(int i = 0; i < this._rows; i++) {
+			List<Region> r = new ArrayList<Region>();
+			for(int j = 0; j < this._cols; j++) {
+				r.add(new DefaultRegion());
 			}
+			_regions.add(r);
 		}
+//		for (List<Region> row : _regions) {
+//			row = new ArrayList<Region>(this._cols);
+//			for (Region reg : row) {
+//				reg = new DefaultRegion();
+//			}
+//		}
 	}
 
 	void set_region(int row, int col, Region r) {
@@ -62,13 +69,13 @@ public class RegionManager implements AnimalMapView {
 	}
 
 	void register_animal(Animal a) {
+		a.init(this);
+		
 		Region r = getRegionFromAnimal(a);
 
 		r.add_animal(a);
 
 		_animal_region.put(a, r);
-
-		a.init(this);
 	}
 
 	void unregister_animal(Animal a) {

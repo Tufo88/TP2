@@ -41,7 +41,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 	SelectionStrategy _mate_strategy;
 
 	protected Animal(String genetic_code, Diet diet, double sight_range, double init_speed,
-			SelectionStrategy mate_strategy, Vector2D pos) throws Exception {
+			SelectionStrategy mate_strategy, Vector2D pos) throws IllegalArgumentException {
 		/*
 		 * if(genetic_code.equals("") || sight_range < 0 || init_speed < 0 ||
 		 * mate_strategy == null) throw new Exception("A");
@@ -56,11 +56,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 		_state = State.NORMAL;
 		_energy = _INITIAL_ENERGY;
 		_desire = 0;
-		// _dest = null;
-		double x = Utils._rand.nextDouble(800);
-		double y = Utils._rand.nextDouble(600);
-		Vector2D v = new Vector2D(x, y);
-		_dest = v;
+		_dest = null;
 		_mate_target = null;
 		_baby = null;
 		_region_mngr = null;
@@ -87,11 +83,11 @@ public abstract class Animal implements Entity, AnimalInfo {
 
 		_region_mngr = reg_mngr;
 		if (_pos == null) {
-			_pos = Vector2D.get_random_vector(_region_mngr.get_width() - 1, _region_mngr.get_height() - 1);
+			_pos = Vector2D.get_random_vector(0, _region_mngr.get_width() - 1, 0, _region_mngr.get_height() - 1);
 		} else {
 			_pos = Vector2D.adjust_vector(_pos, _region_mngr.get_width() - 1, _region_mngr.get_height() - 1);
 		}
-		_dest = Vector2D.get_random_vector(_region_mngr.get_width() - 1, _region_mngr.get_height() - 1);
+		_dest = Vector2D.get_random_vector(0, _region_mngr.get_width() - 1, 0, _region_mngr.get_height() - 1);
 
 	}
 

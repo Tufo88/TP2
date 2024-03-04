@@ -1,5 +1,6 @@
 package simulator.model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
@@ -11,6 +12,9 @@ public abstract class Region implements FoodSupplier, RegionInfo, Entity {
 
 	protected List<Animal> list;
 
+	public Region() {
+		list = new ArrayList<Animal>();
+	}
 	final void add_animal(Animal a) {
 		list.add(a);
 	}
