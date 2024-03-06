@@ -40,9 +40,9 @@ public class RegionManager implements AnimalMapView {
 	}
 
 	private void initRegions() {
-		_regions = new ArrayList<List<Region>>();
+		_regions = new ArrayList<List<Region>>(this._rows);
 		for(int i = 0; i < this._rows; i++) {
-			List<Region> r = new ArrayList<Region>();
+			List<Region> r = new ArrayList<Region>(this._cols);
 			for(int j = 0; j < this._cols; j++) {
 				r.add(new DefaultRegion());
 			}
