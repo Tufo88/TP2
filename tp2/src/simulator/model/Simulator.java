@@ -75,6 +75,7 @@ public class Simulator implements JSONable {
 			}
 			else {
 				a.update(dt);
+				_reg_mngr.update_animal_region(a);
 				if(a.is_pregnant()) {
 					Animal b = a.deliver_baby();
 					_reg_mngr.register_animal(b);
