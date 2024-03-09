@@ -10,15 +10,14 @@ public class DefaultRegion extends Region {
 		if (a.get_diet() == Diet.CARNIVORE)
 			return 0.0;
 
-		return _FOOD_CONSUME_FACTOR * Math.exp(
+		return _FOOD_CONSUME_FACTOR * dt * Math.exp(
 				-Math.max(0, getAnimals((Animal b) -> b.get_diet() == Diet.HERVIBORE).size() - _FOOD_ANIMAL_CONSTANT)
-						* _FOOD_MAX_COEF)
-				* dt;
+						* _FOOD_MAX_COEF);
 	}
 
 	@Override
 	public void update(double dt) {
-
+		return;
 	}
 
 }

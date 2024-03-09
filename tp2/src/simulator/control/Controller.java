@@ -16,6 +16,7 @@ import simulator.view.SimpleObjectViewer;
 
 public class Controller {
 
+	private static final int _JSON_INDENT_AMOUNT = 2;
 	Simulator _sim;
 
 	public Controller(Simulator sim) {
@@ -49,8 +50,9 @@ public class Controller {
 		JSONArray animals = data.getJSONArray("animals");
 		for (Object obj : animals) {
 			JSONObject animal = (JSONObject) obj;
-
-			for (int i = 0; i < animal.getInt("amount"); i++)
+			int amount = animal.getInt("amount");
+			
+			for (int i = 0; i < amount; i++)
 				_sim.add_animal(animal.getJSONObject("spec"));
 		}
 	}
@@ -75,7 +77,7 @@ public class Controller {
 			view.close();
 		obj.append("out", _sim.as_JSON());
 		PrintStream p = new PrintStream(out);
-		p.println(obj.toString());
+		p.println(obj.toString(Controller._JSON_INDENT_AMOUNT));
 
 	}
 

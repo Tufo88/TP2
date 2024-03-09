@@ -1,5 +1,6 @@
 package simulator.model;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import simulator.misc.Utils;
@@ -25,27 +26,32 @@ public abstract class Animal implements Entity, AnimalInfo {
 
 	static final double _MAX_DESIRE = 100.0;
 
-	String _genetic_code;
-	Diet _diet;
-	State _state;
-	Vector2D _pos;
-	Vector2D _dest;
-	double _energy;
-	double _speed;
-	double _age;
-	double _desire;
-	double _sight_range;
-	Animal _mate_target;
-	Animal _baby;
-	AnimalMapView _region_mngr;
-	SelectionStrategy _mate_strategy;
+	protected String _genetic_code;
+	protected Diet _diet;
+	protected State _state;
+	protected Vector2D _pos;
+	protected Vector2D _dest;
+	protected double _energy;
+	protected double _speed;
+	protected double _age;
+	protected double _desire;
+	protected double _sight_range;
+	protected Animal _mate_target;
+	protected Animal _baby;
+	protected AnimalMapView _region_mngr;
+	protected SelectionStrategy _mate_strategy;
 
 	protected Animal(String genetic_code, Diet diet, double sight_range, double init_speed,
 			SelectionStrategy mate_strategy, Vector2D pos) throws IllegalArgumentException {
-		/*
-		 * if(genetic_code.equals("") || sight_range < 0 || init_speed < 0 ||
-		 * mate_strategy == null) throw new Exception("A");
-		 */
+
+		if (genetic_code.equals(""))
+			throw new IllegalArgumentException("Genetic code is empty");
+		if (sight_range < 0)
+			throw new IllegalArgumentException("Negative sight range");
+		if (init_speed < 0)
+			throw new IllegalArgumentException("Negative initial speed");
+		if (mate_strategy == null)
+			throw new IllegalArgumentException("Mate strategy is null");
 
 		_genetic_code = genetic_code;
 		_diet = diet;
@@ -55,7 +61,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 		_pos = pos;
 		_state = State.NORMAL;
 		_energy = _INITIAL_ENERGY;
-		_desire = 0;
+		_desire = 0.0;
 		_dest = null;
 		_mate_target = null;
 		_baby = null;
@@ -84,20 +90,22 @@ public abstract class Animal implements Entity, AnimalInfo {
 
 		_region_mngr = reg_mngr;
 		if (_pos == null) {
-			_pos = Vector2D.get_random_vector(0, _region_mngr.get_width(), 0, _region_mngr.get_height());
+			_pos = Vector2D.get_random_vector(0, _region_mngr.get_width() - 1, 0, _region_mngr.get_height() - 1);
 		} else {
 			_pos = Vector2D.adjust_vector(_pos, _region_mngr.get_width(), _region_mngr.get_height());
 		}
 		changeRandomDest();
 
 	}
-	
+
 	boolean isInMap() {
-		return _pos.isInsideRectangle(0, _region_mngr.get_width(), 0, _region_mngr.get_height());
+		return _pos.isInsideRectangle(0, _region_mngr.get_width() - 1, 0, _region_mngr.get_height() - 1);
 	}
+
 	void changeRandomDest() {
-		_dest = Vector2D.get_random_vector(0, _region_mngr.get_width(), 0, _region_mngr.get_height());
+		_dest = Vector2D.get_random_vector(0, _region_mngr.get_width() - 1, 0, _region_mngr.get_height() - 1);
 	}
+
 	Animal deliver_baby() {
 		Animal a = _baby;
 		_baby = null;
@@ -109,12 +117,10 @@ public abstract class Animal implements Entity, AnimalInfo {
 	}
 
 	public JSONObject as_JSON() {
-		return new JSONObject().put("pos", _pos.toString()).put("gcode", _genetic_code).put("diet", _diet.toString())
-				.put("state", _state.toString());
-	}
-
-	protected final boolean isOutOfBounds() {
-		return _pos.isInsideRectangle(0, 800, 0, 600);
+		return new JSONObject()
+				.put("pos", new JSONArray().put(this.get_position().getX()).put(this.get_position().getY()))
+				.put("gcode", _genetic_code)
+				.put("diet", _diet.toString()).put("state", _state.toString());
 	}
 
 	@Override
@@ -159,7 +165,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 
 	@Override
 	public Vector2D get_destination() {
-		return new Vector2D(_dest); 
+		return new Vector2D(_dest);
 	}
 
 	@Override
@@ -170,6 +176,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 	void setDesire(double x) {
 		_desire = x;
 	}
+
 	protected void updateEnergy(double x) {
 		_energy += x;
 		_energy = Utils.constrain_value_in_range(_energy, _MIN_ENERGY, _MAX_ENERGY);
@@ -188,12 +195,16 @@ public abstract class Animal implements Entity, AnimalInfo {
 	protected void matingLogic() {
 		setDesire(_MIN_DESIRE);
 		_mate_target.setDesire(_MIN_DESIRE);
-		
+
 		if (_baby == null && Utils._rand.nextDouble() < _NEW_BABY_PROBABILITY) {
 			_baby = generateDescendency();
 		}
 
 		_mate_target = null;
+	}
+
+	public boolean isDead() {
+		return _state == State.DEAD;
 	}
 
 	@Override
@@ -203,7 +214,4 @@ public abstract class Animal implements Entity, AnimalInfo {
 
 	public abstract void updateState();
 
-	public boolean is_dead() {
-		return _state == State.DEAD;
-	}
 }

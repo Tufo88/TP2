@@ -25,13 +25,15 @@ public class RegionManager implements AnimalMapView {
 	public RegionManager(int cols, int rows, int width, int height) {
 		this._cols = cols;
 		this._rows = rows;
-		
+
 		this._region_width = width / this._cols;
 		this._region_height = height / this._rows;
-		
-		this._height = this._region_height * this._rows;
-		this._width = this._region_width * this._cols;
-		
+
+		this._height = height;
+		this._width = width;
+//		this._height = this._region_height * this._rows;
+//		this._width = this._region_width * this._cols;
+
 //		if(this._width % this._cols != 0) this._cols++;
 //		if(this._height % this._rows != 0) this._rows++;
 		initRegions();
@@ -41,9 +43,9 @@ public class RegionManager implements AnimalMapView {
 
 	private void initRegions() {
 		_regions = new ArrayList<List<Region>>(this._rows);
-		for(int i = 0; i < this._rows; i++) {
+		for (int i = 0; i < this._rows; i++) {
 			List<Region> r = new ArrayList<Region>(this._cols);
-			for(int j = 0; j < this._cols; j++) {
+			for (int j = 0; j < this._cols; j++) {
 				r.add(new DefaultRegion());
 			}
 			_regions.add(r);
@@ -68,12 +70,13 @@ public class RegionManager implements AnimalMapView {
 	}
 
 	private Region getRegionFromAnimal(Animal a) {
-		return _regions.get((int) a.get_position().getY() / _region_height).get((int) a.get_position().getX() / _region_width);
+		return _regions.get((int) (a.get_position().getY() - 1) / _region_height)
+				.get((int) (a.get_position().getX() - 1) / _region_width);
 	}
 
 	void register_animal(Animal a) {
 		a.init(this);
-		
+
 		Region r = getRegionFromAnimal(a);
 
 		r.add_animal(a);
@@ -145,8 +148,8 @@ public class RegionManager implements AnimalMapView {
 	@Override
 	public List<Animal> get_animals_in_range(Animal e, Predicate<Animal> filter) {
 		int i = 0, j = 0;
-		int regActI = (int) e.get_position().getY() / _region_height;
-		int regActJ = (int) e.get_position().getX() / _region_width;
+		int regActI = (int) e.get_position().getY()-1 / _region_height;
+		int regActJ = (int) e.get_position().getX()-1 / _region_width;
 		int maxRangeI = (int) e.get_sight_range() / _region_height;
 		int maxRangeJ = (int) e.get_sight_range() / _region_width;
 
@@ -167,7 +170,7 @@ public class RegionManager implements AnimalMapView {
 
 	@Override
 	public JSONObject as_JSON() {
-		
+
 		JSONObject obj = new JSONObject().append("regiones", new JSONArray());
 		int i = 0, j = 0;
 		for (List<Region> row : _regions) {

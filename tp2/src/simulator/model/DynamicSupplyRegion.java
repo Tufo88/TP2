@@ -6,8 +6,8 @@ public class DynamicSupplyRegion extends Region {
 	static final double _FOOD_MAX_COEF = 2.0;
 	static final double _FOOD_ANIMAL_CONSTANT = 5.0;
 	static final double _FOOD_CONSUME_FACTOR = 60.0;
-	double _food;
-	double _factor;
+	private double _food;
+	private double _factor;
 
 	public DynamicSupplyRegion(double foodAmount, double growRate) {
 		_food = foodAmount;
@@ -18,6 +18,7 @@ public class DynamicSupplyRegion extends Region {
 	public double get_food(Animal a, double dt) {
 		if (a.get_diet() == Diet.CARNIVORE)
 			return 0.0;
+
 		double amount = Math.min(_food, _FOOD_CONSUME_FACTOR * Math.exp(
 				-Math.max(0, getAnimals((Animal b) -> b.get_diet() == Diet.HERVIBORE).size() - _FOOD_ANIMAL_CONSTANT)
 						* _FOOD_MAX_COEF)

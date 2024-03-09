@@ -17,11 +17,11 @@ public class Simulator implements JSONable {
 	RegionManager _reg_mngr;
 	List<Animal> _animals;
 
-	double _dt;
+	double _time;
 
 	public Simulator(int cols, int rows, int width, int height, Factory<Animal> animals_factory,
 			Factory<Region> regions_factory) {
-		_dt = 0.0;
+		_time = 0.0;
 		this._animals_factory = animals_factory;
 		this._regions_factory = regions_factory;
 		_reg_mngr = new RegionManager(cols, rows, width, height);
@@ -34,7 +34,7 @@ public class Simulator implements JSONable {
 
 	public void set_region(int row, int col, JSONObject r_json) {
 		Region r = null;
-		
+
 		r = _regions_factory.create_instance(r_json);
 		this.set_region(row, col, r);
 	}
@@ -43,52 +43,54 @@ public class Simulator implements JSONable {
 		_animals.add(a);
 		_reg_mngr.register_animal(a);
 	}
-	
+
 	public void add_animal(JSONObject a_json) {
 		Animal a = null;
 		a = _animals_factory.create_instance(a_json);
 		this.add_animal(a);
 	}
-	
+
 	public MapInfo get_map_info() {
 		return _reg_mngr;
 	}
-	
+
 	public List<? extends AnimalInfo> get_animals() {
 		return Collections.unmodifiableList(_animals);
 	}
-	
+
 	public double get_time() {
-		return _dt;
+		return _time;
 	}
-	
+
 	public void advance(double dt) {
-		_dt += dt;
+		_time += dt;
 		Iterator<Animal> i = _animals.iterator();
 		List<Animal> newAnimals = new ArrayList<Animal>();
-		if(_animals.isEmpty()) return;
-		while(i.hasNext()) {
+		if (_animals.isEmpty())
+			return;
+		while (i.hasNext()) {
 			Animal a = i.next();
-			if(a.is_dead()) {
+			if (a.isDead()) {
 				_reg_mngr.unregister_animal(a);
 				i.remove();
-			}
-			else {
+			} else {
 				a.update(dt);
 				_reg_mngr.update_animal_region(a);
-				if(a.is_pregnant()) {
+				if (a.is_pregnant()) {
 					Animal b = a.deliver_baby();
+					// no podemos hacer directamente add_animal porque si no nos quedariamos sin
+					// iterador
 					_reg_mngr.register_animal(b);
 					newAnimals.add(b);
 				}
 			}
 		}
-		_animals.addAll(newAnimals);
+		_animals.addAll(newAnimals); // hacemos el _animals.add(a) que tambien hace el add_animal
 		_reg_mngr.update_all_regions(dt);
 	}
-	
+
 	@Override
 	public JSONObject as_JSON() {
-		return new JSONObject().append("time", _dt).append("state", _reg_mngr.as_JSON());
+		return new JSONObject().append("time", _time).append("state", _reg_mngr.as_JSON());
 	}
 }
