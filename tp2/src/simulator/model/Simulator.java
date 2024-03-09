@@ -20,7 +20,10 @@ public class Simulator implements JSONable {
 	double _time;
 
 	public Simulator(int cols, int rows, int width, int height, Factory<Animal> animals_factory,
-			Factory<Region> regions_factory) {
+			Factory<Region> regions_factory) throws IllegalArgumentException {
+		if(animals_factory == null) throw new IllegalArgumentException("Animal factory is null");
+		if(regions_factory == null) throw new IllegalArgumentException("Region factory is null");
+		
 		_time = 0.0;
 		this._animals_factory = animals_factory;
 		this._regions_factory = regions_factory;

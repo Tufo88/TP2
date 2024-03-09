@@ -38,6 +38,9 @@ public class Controller {
 
 				JSONObject spec = jObj.getJSONObject("spec");
 
+				if(rf >= _sim.get_map_info().get_rows()) throw new IllegalArgumentException("Invalid row number provided");
+				if(cf >= _sim.get_map_info().get_cols()) throw new IllegalArgumentException("Invalid col number provided");
+				
 				for (int i = rf; i <= rt; i++) {
 					for (int j = cf; j <= ct; j++) {
 						_sim.set_region(i, j, spec);
@@ -45,13 +48,13 @@ public class Controller {
 				}
 			}
 
-		} 
+		}
 
 		JSONArray animals = data.getJSONArray("animals");
 		for (Object obj : animals) {
 			JSONObject animal = (JSONObject) obj;
 			int amount = animal.getInt("amount");
-			
+
 			for (int i = 0; i < amount; i++)
 				_sim.add_animal(animal.getJSONObject("spec"));
 		}
@@ -75,6 +78,7 @@ public class Controller {
 		}
 		if (sv)
 			view.close();
+
 		obj.append("out", _sim.as_JSON());
 		PrintStream p = new PrintStream(out);
 		p.println(obj.toString(Controller._JSON_INDENT_AMOUNT));
@@ -85,7 +89,8 @@ public class Controller {
 
 		List<ObjInfo> ol = new ArrayList<>(animals.size());
 		for (AnimalInfo a : animals)
-			ol.add(new ObjInfo(a.get_genetic_code(), (int) a.get_position().getX(), (int) a.get_position().getY(), (int) Math.round(a.get_age())+2));
+			ol.add(new ObjInfo(a.get_genetic_code(), (int) a.get_position().getX(), (int) a.get_position().getY(),
+					(int) Math.round(a.get_age()) + 2));
 		return ol;
 	}
 

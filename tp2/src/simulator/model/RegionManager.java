@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class RegionManager implements AnimalMapView {
@@ -22,20 +21,19 @@ public class RegionManager implements AnimalMapView {
 
 	Map<Animal, Region> _animal_region;
 
-	public RegionManager(int cols, int rows, int width, int height) {
+	public RegionManager(int cols, int rows, int width, int height) throws IllegalArgumentException {
+		if(width < cols) throw new IllegalArgumentException("Width has to be greater than cols"); // if width < cols, region_width = 0
+		if(height < rows) throw new IllegalArgumentException("Height has to be greater than rows");
+		
 		this._cols = cols;
 		this._rows = rows;
 
 		this._region_width = width / this._cols;
 		this._region_height = height / this._rows;
 
-		this._height = height;
-		this._width = width;
-//		this._height = this._region_height * this._rows;
-//		this._width = this._region_width * this._cols;
+		this._height = this._region_height * this._rows;
+		this._width = this._region_width * this._cols;
 
-//		if(this._width % this._cols != 0) this._cols++;
-//		if(this._height % this._rows != 0) this._rows++;
 		initRegions();
 
 		this._animal_region = new HashMap<Animal, Region>();
@@ -50,15 +48,11 @@ public class RegionManager implements AnimalMapView {
 			}
 			_regions.add(r);
 		}
-//		for (List<Region> row : _regions) {
-//			row = new ArrayList<Region>(this._cols);
-//			for (Region reg : row) {
-//				reg = new DefaultRegion();
-//			}
-//		}
 	}
 
 	void set_region(int row, int col, Region r) {
+		if(row >= _rows) throw new IllegalArgumentException("Trying to access row [" + row + "] of [" + _rows + "]");
+		if(col >= _cols) throw new IllegalArgumentException("Trying to access col [" + col + "] of [" + _cols + "]");
 		Region prev = _regions.get(row).get(col);
 
 		prev.getAnimals().forEach((a) -> {
@@ -70,8 +64,8 @@ public class RegionManager implements AnimalMapView {
 	}
 
 	private Region getRegionFromAnimal(Animal a) {
-		return _regions.get((int) (a.get_position().getY() - 1) / _region_height)
-				.get((int) (a.get_position().getX() - 1) / _region_width);
+		return _regions.get((int) a.get_position().getY() / _region_height)
+				.get((int) a.get_position().getX() / _region_width);
 	}
 
 	void register_animal(Animal a) {
@@ -148,8 +142,8 @@ public class RegionManager implements AnimalMapView {
 	@Override
 	public List<Animal> get_animals_in_range(Animal e, Predicate<Animal> filter) {
 		int i = 0, j = 0;
-		int regActI = (int) e.get_position().getY()-1 / _region_height;
-		int regActJ = (int) e.get_position().getX()-1 / _region_width;
+		int regActI = (int) e.get_position().getY() / _region_height;
+		int regActJ = (int) e.get_position().getX() / _region_width;
 		int maxRangeI = (int) e.get_sight_range() / _region_height;
 		int maxRangeJ = (int) e.get_sight_range() / _region_width;
 
@@ -171,7 +165,7 @@ public class RegionManager implements AnimalMapView {
 	@Override
 	public JSONObject as_JSON() {
 
-		JSONObject obj = new JSONObject().append("regiones", new JSONArray());
+		JSONObject obj = new JSONObject();
 		int i = 0, j = 0;
 		for (List<Region> row : _regions) {
 			for (Region r : row) {

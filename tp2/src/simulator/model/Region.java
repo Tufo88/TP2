@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.json.JSONObject;
-import org.json.JSONArray;
 
 public abstract class Region implements FoodSupplier, RegionInfo, Entity {
 
@@ -15,6 +14,7 @@ public abstract class Region implements FoodSupplier, RegionInfo, Entity {
 	public Region() {
 		list = new ArrayList<Animal>();
 	}
+
 	final void add_animal(Animal a) {
 		list.add(a);
 	}
@@ -33,7 +33,7 @@ public abstract class Region implements FoodSupplier, RegionInfo, Entity {
 
 	public JSONObject as_JSON() {
 
-		JSONObject obj = new JSONObject().append("animals", new JSONArray());
+		JSONObject obj = new JSONObject();
 
 		for (Animal a : list) {
 			obj.append("animals", a.as_JSON());

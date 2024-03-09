@@ -25,7 +25,7 @@ public class Vector2D {
 	}
 
 	public boolean isInsideRectangle(int x1, int x2, int y1, int y2) { // xi anchura yi altura
-		return _x < x2 && _x > x1 && _y < y2 && _y > y1;
+		return _x <= x2 && _x >= x1 && _y <= y2 && _y >= y1;
 	}
 
 	// return the inner product of this Vector a and b
@@ -125,7 +125,7 @@ public class Vector2D {
 		assert (y >= minY && y <= maxY);
 		return new Vector2D(x, y);
 	}
-	
+
 	public static Vector2D adjust_vector(Vector2D vector, int width, int height) {
 		Vector2D newVector = new Vector2D(vector);
 		while (newVector._x >= width)

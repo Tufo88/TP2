@@ -119,8 +119,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 	public JSONObject as_JSON() {
 		return new JSONObject()
 				.put("pos", new JSONArray().put(this.get_position().getX()).put(this.get_position().getY()))
-				.put("gcode", _genetic_code)
-				.put("diet", _diet.toString()).put("state", _state.toString());
+				.put("gcode", _genetic_code).put("diet", _diet.toString()).put("state", _state.toString());
 	}
 
 	@Override
@@ -208,10 +207,35 @@ public abstract class Animal implements Entity, AnimalInfo {
 	}
 
 	@Override
-	public abstract void update(double dt);
+	public void update(double dt) {
+		if (isDead())
+			return;
+
+		stateLogic(dt);
+
+		_age += dt;
+
+		adjustPosition();
+
+		updateState();
+
+		requestFood(dt);
+	}
+
+	protected abstract void requestFood(double dt);
+
+	private void adjustPosition() {
+		if (!isInMap()) {
+			_pos = Vector2D.adjust_vector(_pos, _region_mngr.get_width(), _region_mngr.get_height());
+			updateState(State.NORMAL);
+		}
+	}
+
+	protected abstract void stateLogic(double dt);
 
 	protected abstract Animal generateDescendency();
 
-	public abstract void updateState();
+	protected abstract void updateState();
 
+	protected abstract void updateState(State state);
 }

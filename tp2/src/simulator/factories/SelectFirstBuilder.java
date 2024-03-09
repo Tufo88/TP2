@@ -9,12 +9,12 @@ public class SelectFirstBuilder extends Builder<SelectionStrategy> {
 
 	public SelectFirstBuilder() {
 		super("first", "Select First Strategy");
-		
+
 	}
 
 	@Override
 	protected SelectionStrategy create_instance(JSONObject data) {
-		
+
 		return new SelectFirst();
 	}
 

@@ -29,7 +29,8 @@ public class Wolf extends Animal {
 	public Wolf(SelectionStrategy mate_strategy, SelectionStrategy hunting_strategy, Vector2D pos)
 			throws IllegalArgumentException {
 		super("Wolfangkillers", _INITIAL_DIET, _INITIAL_SIGHT, _INITIAL_SPEED, mate_strategy, pos);
-
+		if (hunting_strategy == null)
+			throw new IllegalArgumentException("Hunt strategy is null");
 		_hunting_strategy = hunting_strategy;
 		_hunt_target = null;
 
@@ -42,85 +43,12 @@ public class Wolf extends Animal {
 	}
 
 	@Override
-	public void update(double dt) {
-		if (isDead())
-			return;
-
-		if (this.get_state() == State.NORMAL) {
-			normal_state_update(dt);
-		} 
-		else if (this.get_state() == State.HUNGER) {
-			
-			if (_hunt_target == null || _hunt_target.isDead() || !isInSight(_hunt_target)) {
-				_hunt_target = _hunting_strategy.select(this,
-						_region_mngr.get_animals_in_range(this, (Animal a) -> a.get_diet() == Diet.HERVIBORE));
-			}
-			if (_hunt_target == null) {
-				normal_state_update(dt);
-			} else {
-				_dest = _hunt_target.get_position();
-				this.move(_SPEED_FACTOR * this.get_speed() * dt
-						* Math.exp((this.get_energy() - Animal._INITIAL_ENERGY) * _ENERGY_COEF));
-
-				updateEnergy(-_ENERGY_HUNGER_COEF * _ENERGY_DECREASE_COEF * dt);
-				updateDesire(_DESIRE_INCREASE_COEF * dt);
-
-				if (_pos.distanceTo(this.get_destination()) < _REACH_DEST_DIST) {
-					_hunt_target._state = State.DEAD;
-					_hunt_target = null;
-					updateEnergy(_HUNT_REGEN);
-				}
-			}
-
-		} 
-		else if (this.get_state() == State.MATE) {
-
-			if (_mate_target != null && (_mate_target.isDead() || !isInSight(_mate_target)))
-				_mate_target = null;
-			if (_mate_target == null)
-				_mate_target = _mate_strategy.select(this, _region_mngr.get_animals_in_range(this,
-						(Animal a) -> a.get_genetic_code() == this.get_genetic_code()));
-
-			if (_mate_target == null)
-				normal_state_update(dt);
-			else {
-				_dest = _mate_target.get_position();
-				move(_SPEED_FACTOR * this.get_speed() * dt
-						* Math.exp((this.get_energy() - _MAX_ENERGY) * _ENERGY_COEF));
-				updateEnergy(-_ENERGY_DECREASE_COEF * _ENERGY_MATE_COEF * dt);
-				updateDesire(_DESIRE_INCREASE_COEF * dt);
-				if (this.get_position().distanceTo(this.get_destination()) < _REACH_DEST_DIST) {
-					matingLogic();
-					updateEnergy(-_MATING_ENERGY_DECREASE);
-				}
-			}
-
-		}
-
-		_age += dt;
-		
-		updateState();
-
-		if (!isInMap()) {
-			Vector2D.adjust_vector(_pos, _region_mngr.get_width(), _region_mngr.get_height());
-			updateState(State.NORMAL);
-		}
-
-		if (_energy <= 0.0 || _age > _MAX_AGE) {
-			updateState(State.DEAD);
-		}
-
-		if (!isDead()) {
-			updateEnergy(_region_mngr.get_food(this, dt));
-		}
-	}
-
-	@Override
 	protected Animal generateDescendency() {
 		return new Wolf(this, _mate_target);
 	}
 
-	private void updateState(State state) {
+	@Override
+	protected void updateState(State state) {
 		if (state == State.NORMAL) {
 			_hunt_target = null;
 			_mate_target = null;
@@ -136,8 +64,9 @@ public class Wolf extends Animal {
 	public void updateState() {
 		if (isDead())
 			return;
-
-		if (_energy < _MIN_ENERGY_STATE_UPDATE)
+		if (_energy <= 0.0 || _age > _MAX_AGE) {
+			updateState(State.DEAD);
+		} else if (_energy < _MIN_ENERGY_STATE_UPDATE)
 			updateState(State.HUNGER);
 		else if (_desire < _MIN_DESIRE_UPDATE_VALUE)
 			updateState(State.NORMAL);
@@ -157,4 +86,67 @@ public class Wolf extends Animal {
 		updateDesire(_DESIRE_INCREASE_COEF * dt);
 	}
 
+	private void hunger_state_update(double dt) {
+		if (_hunt_target == null || _hunt_target.isDead() || !isInSight(_hunt_target)) {
+			_hunt_target = _hunting_strategy.select(this,
+					_region_mngr.get_animals_in_range(this, (Animal a) -> a.get_diet() == Diet.HERVIBORE));
+		}
+
+		if (_hunt_target == null) {
+			normal_state_update(dt);
+		} else {
+			_dest = _hunt_target.get_position();
+			this.move(_SPEED_FACTOR * this.get_speed() * dt
+					* Math.exp((this.get_energy() - Animal._INITIAL_ENERGY) * _ENERGY_COEF));
+
+			updateEnergy(-_ENERGY_HUNGER_COEF * _ENERGY_DECREASE_COEF * dt);
+			updateDesire(_DESIRE_INCREASE_COEF * dt);
+
+			if (_pos.distanceTo(this.get_destination()) < _REACH_DEST_DIST) {
+				_hunt_target._state = State.DEAD;
+				_hunt_target = null;
+				updateEnergy(_HUNT_REGEN);
+			}
+		}
+	}
+
+	private void mate_state_update(double dt) {
+		if (_mate_target != null && (_mate_target.isDead() || !isInSight(_mate_target)))
+			_mate_target = null;
+		if (_mate_target == null)
+			_mate_target = _mate_strategy.select(this, _region_mngr.get_animals_in_range(this,
+					(Animal a) -> a.get_genetic_code() == this.get_genetic_code()));
+
+		if (_mate_target == null)
+			normal_state_update(dt);
+		else {
+			_dest = _mate_target.get_position();
+			move(_SPEED_FACTOR * this.get_speed() * dt * Math.exp((this.get_energy() - _MAX_ENERGY) * _ENERGY_COEF));
+			updateEnergy(-_ENERGY_DECREASE_COEF * _ENERGY_MATE_COEF * dt);
+			updateDesire(_DESIRE_INCREASE_COEF * dt);
+			if (this.get_position().distanceTo(this.get_destination()) < _REACH_DEST_DIST) {
+				matingLogic();
+				updateEnergy(-_MATING_ENERGY_DECREASE);
+			}
+		}
+	}
+
+	@Override
+	protected void requestFood(double dt) {
+		if (!isDead()) {
+			updateEnergy(_region_mngr.get_food(this, dt));
+		}
+	}
+
+	@Override
+	protected void stateLogic(double dt) {
+		if (this.get_state() == State.NORMAL) {
+			normal_state_update(dt);
+		} else if (this.get_state() == State.HUNGER) {
+			hunger_state_update(dt);
+		} else if (_state == State.MATE) {
+			mate_state_update(dt);
+		}
+
+	}
 }

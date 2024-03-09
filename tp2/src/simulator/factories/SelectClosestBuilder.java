@@ -8,13 +8,12 @@ import simulator.model.SelectionStrategy;
 public class SelectClosestBuilder extends Builder<SelectionStrategy> {
 	public SelectClosestBuilder() {
 		super("closest", "Select Closest Strategy");
-		
+
 	}
 
 	@Override
 	protected SelectionStrategy create_instance(JSONObject data) {
-		
+
 		return new SelectClosest();
 	}
 }
-

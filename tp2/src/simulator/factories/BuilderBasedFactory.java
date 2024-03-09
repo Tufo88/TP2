@@ -25,7 +25,7 @@ public class BuilderBasedFactory<T> implements Factory<T> {
 	}
 
 	public void add_builder(Builder<T> b) {
-		
+
 		_builders.put(b.get_type_tag(), b);
 
 		_builders_info.add(b.get_info());
@@ -33,15 +33,15 @@ public class BuilderBasedFactory<T> implements Factory<T> {
 
 	@Override
 	public T create_instance(JSONObject info) {
-		if (info == null) 
+		if (info == null)
 			throw new IllegalArgumentException("'info' cannot be null");
-		
+
 		String type = info.optString("type");
-		if (type == null) 
+		if (type == null)
 			throw new IllegalArgumentException("Unrecognized 'info':" + info.toString());
-		
+
 		Builder<T> builder = _builders.get(type);
-		
+
 		if (builder != null) {
 			return builder.create_instance(info.has("data") ? info.getJSONObject("data") : new JSONObject());
 		}
