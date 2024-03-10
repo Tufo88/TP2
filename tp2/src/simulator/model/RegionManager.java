@@ -22,9 +22,12 @@ public class RegionManager implements AnimalMapView {
 	Map<Animal, Region> _animal_region;
 
 	public RegionManager(int cols, int rows, int width, int height) throws IllegalArgumentException {
-		if(width < cols) throw new IllegalArgumentException("Width has to be greater than cols"); // if width < cols, region_width = 0
-		if(height < rows) throw new IllegalArgumentException("Height has to be greater than rows");
-		
+		if (width < cols)
+			throw new IllegalArgumentException("Width has to be greater than cols"); // if width < cols, region_width =
+																						// 0
+		if (height < rows)
+			throw new IllegalArgumentException("Height has to be greater than rows");
+
 		this._cols = cols;
 		this._rows = rows;
 
@@ -51,8 +54,10 @@ public class RegionManager implements AnimalMapView {
 	}
 
 	void set_region(int row, int col, Region r) {
-		if(row >= _rows) throw new IllegalArgumentException("Trying to access row [" + row + "] of [" + _rows + "]");
-		if(col >= _cols) throw new IllegalArgumentException("Trying to access col [" + col + "] of [" + _cols + "]");
+		if (row >= _rows)
+			throw new IllegalArgumentException("Trying to access row [" + row + "] of [" + _rows + "]");
+		if (col >= _cols)
+			throw new IllegalArgumentException("Trying to access col [" + col + "] of [" + _cols + "]");
 		Region prev = _regions.get(row).get(col);
 
 		prev.getAnimals().forEach((a) -> {
@@ -169,7 +174,7 @@ public class RegionManager implements AnimalMapView {
 		int i = 0, j = 0;
 		for (List<Region> row : _regions) {
 			for (Region r : row) {
-				JSONObject reg_obj = new JSONObject().append("row", i).append("col", j).append("data", r.as_JSON());
+				JSONObject reg_obj = new JSONObject().put("row", i).put("col", j).put("data", r.as_JSON());
 				obj.append("regiones", reg_obj);
 				j++;
 			}

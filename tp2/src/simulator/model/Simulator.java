@@ -21,9 +21,11 @@ public class Simulator implements JSONable {
 
 	public Simulator(int cols, int rows, int width, int height, Factory<Animal> animals_factory,
 			Factory<Region> regions_factory) throws IllegalArgumentException {
-		if(animals_factory == null) throw new IllegalArgumentException("Animal factory is null");
-		if(regions_factory == null) throw new IllegalArgumentException("Region factory is null");
-		
+		if (animals_factory == null)
+			throw new IllegalArgumentException("Animal factory is null");
+		if (regions_factory == null)
+			throw new IllegalArgumentException("Region factory is null");
+
 		_time = 0.0;
 		this._animals_factory = animals_factory;
 		this._regions_factory = regions_factory;
@@ -94,6 +96,6 @@ public class Simulator implements JSONable {
 
 	@Override
 	public JSONObject as_JSON() {
-		return new JSONObject().append("time", _time).append("state", _reg_mngr.as_JSON());
+		return new JSONObject().put("time", _time).put("state", _reg_mngr.as_JSON());
 	}
 }

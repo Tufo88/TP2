@@ -25,7 +25,7 @@ public class Sheep extends Animal {
 	public Sheep(SelectionStrategy mate_strategy, SelectionStrategy danger_strategy, Vector2D pos)
 			throws IllegalArgumentException {
 		super("Sheep", _INITIAL_DIET, _INITIAL_SIGHT, _INITIAL_SPEED, mate_strategy, pos);
-		
+
 		if (danger_strategy == null)
 			throw new IllegalArgumentException("Danger strategy is null");
 		_danger_strategy = danger_strategy;

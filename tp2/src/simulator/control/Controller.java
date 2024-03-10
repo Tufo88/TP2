@@ -11,8 +11,8 @@ import org.json.JSONObject;
 import simulator.model.AnimalInfo;
 import simulator.model.MapInfo;
 import simulator.model.Simulator;
-import simulator.view.SimpleObjectViewer.ObjInfo;
 import simulator.view.SimpleObjectViewer;
+import simulator.view.SimpleObjectViewer.ObjInfo;
 
 public class Controller {
 
@@ -38,9 +38,11 @@ public class Controller {
 
 				JSONObject spec = jObj.getJSONObject("spec");
 
-				if(rf >= _sim.get_map_info().get_rows()) throw new IllegalArgumentException("Invalid row number provided");
-				if(cf >= _sim.get_map_info().get_cols()) throw new IllegalArgumentException("Invalid col number provided");
-				
+				if (rf >= _sim.get_map_info().get_rows())
+					throw new IllegalArgumentException("Invalid row number provided");
+				if (cf >= _sim.get_map_info().get_cols())
+					throw new IllegalArgumentException("Invalid col number provided");
+
 				for (int i = rf; i <= rt; i++) {
 					for (int j = cf; j <= ct; j++) {
 						_sim.set_region(i, j, spec);
@@ -61,7 +63,7 @@ public class Controller {
 	}
 
 	public void run(double t, double dt, boolean sv, OutputStream out) {
-		JSONObject obj = new JSONObject().append("in", _sim.as_JSON());
+		JSONObject obj = new JSONObject().put("in", _sim.as_JSON());
 
 		SimpleObjectViewer view = null;
 		if (sv) {
@@ -79,7 +81,7 @@ public class Controller {
 		if (sv)
 			view.close();
 
-		obj.append("out", _sim.as_JSON());
+		obj.put("out", _sim.as_JSON());
 		PrintStream p = new PrintStream(out);
 		p.println(obj.toString(Controller._JSON_INDENT_AMOUNT));
 

@@ -10,10 +10,10 @@ public class SelectClosest implements SelectionStrategy {
 			return null;
 
 		Animal closest = as.get(0);
-		double minDistance = closest.get_position().distanceTo(a.get_position());
+		double minDistance = a.distanceTo(closest);
 
 		for (Animal i : as) {
-			double actualDistance = i.get_position().distanceTo(a.get_position());
+			double actualDistance = a.distanceTo(i);
 			if (actualDistance < minDistance) {
 				closest = i;
 				minDistance = actualDistance;

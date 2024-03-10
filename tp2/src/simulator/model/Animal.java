@@ -172,7 +172,11 @@ public abstract class Animal implements Entity, AnimalInfo {
 		return _baby != null;
 	}
 
-	void setDesire(double x) {
+	public final double distanceTo(Animal a) {
+		return this._pos.distanceTo(a.get_position());
+	}
+	
+	protected void setDesire(double x) {
 		_desire = x;
 	}
 
@@ -190,6 +194,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 	protected boolean isInSight(Animal a) {
 		return _pos.distanceTo(a._pos) <= _sight_range;
 	}
+	
 
 	protected void matingLogic() {
 		setDesire(_MIN_DESIRE);
