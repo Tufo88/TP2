@@ -92,14 +92,28 @@ public abstract class Animal implements Entity, AnimalInfo {
 		if (_pos == null) {
 			_pos = Vector2D.get_random_vector(0, _region_mngr.get_width() - 1, 0, _region_mngr.get_height() - 1);
 		} else {
-			_pos = Vector2D.adjust_vector(_pos, _region_mngr.get_width(), _region_mngr.get_height());
+			adjust_pos(_region_mngr.get_width(), _region_mngr.get_height());
 		}
 		changeRandomDest();
-
 	}
 
+	private void adjust_pos(int width, int height) {
+		while (_pos.getX() >= width)
+			_pos = _pos.plus(new Vector2D(_pos.getX()-width, 0));
+		while (_pos.getX() < 0)
+			_pos = _pos.plus(new Vector2D(_pos.getX()+width, 0));
+		while (_pos.getY() >= height)
+			_pos = _pos.plus(new Vector2D(_pos.getY()-height, 0));
+		while (_pos.getY() < 0)
+			_pos = _pos.plus(new Vector2D(_pos.getY()+height, 0));
+	}
+
+	private boolean isInsideRectangle(int x1, int x2, int y1, int y2) { // xi anchura yi altura
+		return _pos.getX() <= x2 && _pos.getX() >= x1 && _pos.getY() <= y2 && _pos.getY() >= y1;
+	}
+	
 	boolean isInMap() {
-		return _pos.isInsideRectangle(0, _region_mngr.get_width() - 1, 0, _region_mngr.get_height() - 1);
+		return isInsideRectangle(0, _region_mngr.get_width() - 1, 0, _region_mngr.get_height() - 1);
 	}
 
 	void changeRandomDest() {
@@ -231,7 +245,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 
 	private void adjustPosition() {
 		if (!isInMap()) {
-			_pos = Vector2D.adjust_vector(_pos, _region_mngr.get_width(), _region_mngr.get_height());
+			adjust_pos(_region_mngr.get_width(), _region_mngr.get_height());
 			updateState(State.NORMAL);
 		}
 	}
