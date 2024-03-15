@@ -48,15 +48,17 @@ public class RegionManager implements AnimalMapView {
 																						// 0
 		if (height < rows)
 			throw new IllegalArgumentException("Height has to be greater than rows");
-
+		
+		if (width % cols != 0 || height % rows != 0) throw new IllegalArgumentException("Width and Height must be divisible by cols and rows");
+			
 		this._cols = cols;
 		this._rows = rows;
 
 		this._region_width = width / this._cols;
 		this._region_height = height / this._rows;
 
-		this._height = this._region_height * this._rows;
-		this._width = this._region_width * this._cols;
+		this._height = height;
+		this._width = width;
 
 		initRegions();
 
@@ -119,7 +121,9 @@ public class RegionManager implements AnimalMapView {
 			return;
 
 		unregister_animal(a);
-		register_animal(a);
+		
+		r.add_animal(a);
+		_animal_region.put(a, r);
 	}
 
 	void update_all_regions(double dt) {
