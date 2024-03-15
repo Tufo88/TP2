@@ -18,7 +18,7 @@ public class RegionManager implements AnimalMapView {
 	int _region_height;
 	int _region_width;
 
-	List<List<Region>> _regions;
+	Region[][] _regions;
 
 	Map<Animal, Region> _animal_region;
 
@@ -33,7 +33,7 @@ public class RegionManager implements AnimalMapView {
 
 		@Override
 		public RegionData next() {
-			Region r = _regions.get(_row).get(_col);
+			Region r = _regions[_row][_col];
 			
 			_row += (_col + 1) / _cols;
 			_col = (_col + 1) % _cols; 
@@ -66,13 +66,10 @@ public class RegionManager implements AnimalMapView {
 	}
 
 	private void initRegions() {
-		_regions = new ArrayList<List<Region>>(this._rows);
 		for (int i = 0; i < this._rows; i++) {
-			List<Region> r = new ArrayList<Region>(this._cols);
 			for (int j = 0; j < this._cols; j++) {
-				r.add(new DefaultRegion());
+				_regions[i][j] = (new DefaultRegion());
 			}
-			_regions.add(r);
 		}
 	}
 
@@ -81,7 +78,7 @@ public class RegionManager implements AnimalMapView {
 			throw new IllegalArgumentException("Trying to access row [" + row + "] of [" + _rows + "]");
 		if (col >= _cols)
 			throw new IllegalArgumentException("Trying to access col [" + col + "] of [" + _cols + "]");
-		Region prev = _regions.get(row).get(col);
+		Region prev = _regions[row][col];
 
 		prev.getAnimals().forEach((a) -> {
 			r.add_animal(a);
@@ -92,8 +89,7 @@ public class RegionManager implements AnimalMapView {
 	}
 
 	private Region getRegionFromAnimal(Animal a) {
-		return _regions.get((int) a.get_position().getY() / _region_height)
-				.get((int) a.get_position().getX() / _region_width);
+		return _regions[(int) (a.get_position().getY() / _region_height)][((int) a.get_position().getX() / _region_width)];
 	}
 
 	void register_animal(Animal a) {
@@ -127,7 +123,7 @@ public class RegionManager implements AnimalMapView {
 	}
 
 	void update_all_regions(double dt) {
-		for (List<Region> row : _regions) {
+		for (Region[] row : _regions) {
 			for (Region reg : row) {
 				reg.update(dt);
 			}
@@ -186,7 +182,7 @@ public class RegionManager implements AnimalMapView {
 //			}
 //		} 
 		// TODO: PREGUNTAR
-		for (List<Region> row : _regions) {
+		for (Region[] row : _regions) {
 			for (Region r : row) {
 				if (i <= regActI + maxRangeI && i >= regActI - maxRangeI && j <= regActJ + maxRangeJ
 						&& j >= regActJ - maxRangeJ) {
