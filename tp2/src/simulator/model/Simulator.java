@@ -72,6 +72,10 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 		return _reg_mngr;
 	}
 
+	protected List<Animal> getAnimals(Predicate<? super Animal> predicate) {
+		return Collections.unmodifiableList(getAnimals().stream().filter(predicate).toList());
+	}
+	
 	public List<AnimalInfo> get_animals_info() {
 		return Collections.unmodifiableList(_animals);
 	}
