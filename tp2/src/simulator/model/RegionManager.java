@@ -85,7 +85,7 @@ public class RegionManager implements AnimalMapView {
 			_animal_region.put(a, r);
 		});
 
-		_regions.get(row).set(col, r);
+		_regions[row][col] = r;
 	}
 
 	private Region getRegionFromAnimal(Animal a) {
