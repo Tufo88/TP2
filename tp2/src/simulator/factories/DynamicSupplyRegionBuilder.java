@@ -17,11 +17,9 @@ public class DynamicSupplyRegionBuilder extends Builder<Region> {
 
 	@Override
 	protected Region create_instance(JSONObject data) throws IllegalArgumentException {
-		double _factor = data.optDouble("factor");
-		double _food = data.optDouble("food");
-		double factor = Double.isNaN(_factor) ? _DEFAULT_FACTOR : _factor;
-		double food = Double.isNaN(_food) ? _DEFAULT_FOOD : _food;
-
+		double factor = data.optDouble("factor", _DEFAULT_FACTOR);
+		double food = data.optDouble("food", _DEFAULT_FOOD);
+		
 		return new DynamicSupplyRegion(factor, food);
 	}
 
