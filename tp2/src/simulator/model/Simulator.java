@@ -90,18 +90,23 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 			if (a.isDead()) {
 				_reg_mngr.unregister_animal(a);
 				i.remove();
-			} else {
-				a.update(dt);
-				_reg_mngr.update_animal_region(a);
-				if (a.is_pregnant()) {
-					Animal b = a.deliver_baby();
-					// no podemos hacer directamente add_animal porque si no nos quedariamos sin
-					// iterador
-					_reg_mngr.register_animal(b);
-					newAnimals.add(b);
-				}
 			}
 		}
+		while (i.hasNext()) { 
+			Animal a = i.next();
+			a.update(dt);
+			_reg_mngr.update_animal_region(a);
+		}
+		while (i.hasNext()) {
+			Animal a = i.next();
+			if (a.is_pregnant()) {
+				Animal b = a.deliver_baby();
+				// no podemos hacer directamente add_animal porque si no nos quedariamos sin
+				// iterador
+				_reg_mngr.register_animal(b);
+				newAnimals.add(b);
+			}
+		};
 		_animals.addAll(newAnimals); // hacemos el _animals.add(a) que tambien hace el add_animal
 		_reg_mngr.update_all_regions(dt);
 		
