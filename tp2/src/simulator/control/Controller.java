@@ -61,9 +61,9 @@ public class Controller {
 		for (Object obj : animals) {
 			JSONObject animal = (JSONObject) obj;
 			int amount = animal.getInt("amount");
-
+			JSONObject spec = animal.getJSONObject("spec");
 			for (int i = 0; i < amount; i++)
-				_sim.add_animal(animal.getJSONObject("spec"));
+				_sim.add_animal(spec);
 		}
 	}
 
