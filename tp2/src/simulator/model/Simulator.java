@@ -71,10 +71,6 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 	public MapInfo get_map_info() {
 		return _reg_mngr;
 	}
-
-	protected List<? extends AnimalInfo> get_animals() {
-		return Collections.unmodifiableList(_animals);
-	}
 	
 	public List<AnimalInfo> get_animals_info() {
 		return Collections.unmodifiableList(_animals);
