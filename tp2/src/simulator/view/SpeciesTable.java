@@ -6,8 +6,13 @@ import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
 import simulator.model.State;
-public class SpeciesTable extends JTable {
-	private static List<String> columnNames;
+public class SpeciesPanel extends JPanel {
+		
+	class SpeciesTable extends AbstractTableModel {
+		private static List<String> columnNames;
+
+		
+	}
 	
 	private void iniColumnNames() {
 		columnNames.add("Species");
