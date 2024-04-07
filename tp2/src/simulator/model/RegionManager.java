@@ -66,6 +66,8 @@ public class RegionManager implements AnimalMapView {
 	}
 
 	private void initRegions() {
+		
+		_regions = new Region[_rows][_cols];
 		for (int i = 0; i < this._rows; i++) {
 			for (int j = 0; j < this._cols; j++) {
 				_regions[i][j] = (new DefaultRegion());
@@ -120,6 +122,8 @@ public class RegionManager implements AnimalMapView {
 		
 		r.add_animal(a);
 		_animal_region.put(a, r);
+		
+		
 	}
 
 	void update_all_regions(double dt) {

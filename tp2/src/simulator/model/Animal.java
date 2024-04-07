@@ -103,9 +103,9 @@ public abstract class Animal implements Entity, AnimalInfo {
 		while (_pos.getX() < 0)
 			_pos = _pos.plus(new Vector2D(_pos.getX()+width, 0));
 		while (_pos.getY() >= height)
-			_pos = _pos.plus(new Vector2D(_pos.getY()-height, 0));
+			_pos = _pos.plus(new Vector2D(0, _pos.getY()-height));
 		while (_pos.getY() < 0)
-			_pos = _pos.plus(new Vector2D(_pos.getY()+height, 0));
+			_pos = _pos.plus(new Vector2D(0, _pos.getY()+height));
 	}
 
 	private boolean isInsideRectangle(int x1, int x2, int y1, int y2) { // xi anchura yi altura

@@ -81,10 +81,10 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 
 	public void advance(double dt) {
 		_time += dt;
-		Iterator<Animal> i = _animals.iterator();
-		List<Animal> newAnimals = new ArrayList<Animal>();
 		if (_animals.isEmpty())
 			return;
+		Iterator<Animal> i = _animals.iterator();
+		List<Animal> newAnimals = new ArrayList<Animal>();
 		while (i.hasNext()) {
 			Animal a = i.next();
 			if (a.isDead()) {
@@ -92,11 +92,15 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 				i.remove();
 			}
 		}
+
+		i = _animals.iterator();
 		while (i.hasNext()) { 
 			Animal a = i.next();
 			a.update(dt);
 			_reg_mngr.update_animal_region(a);
 		}
+
+		i = _animals.iterator();
 		while (i.hasNext()) {
 			Animal a = i.next();
 			if (a.is_pregnant()) {
@@ -106,7 +110,8 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 				_reg_mngr.register_animal(b);
 				newAnimals.add(b);
 			}
-		};
+		}
+		
 		_animals.addAll(newAnimals); // hacemos el _animals.add(a) que tambien hace el add_animal
 		_reg_mngr.update_all_regions(dt);
 		

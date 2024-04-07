@@ -27,7 +27,7 @@ public abstract class Region implements FoodSupplier, RegionInfo, Entity {
 		return Collections.unmodifiableList(list);
 	}
 
-	public List<Animal> getAnimals(Predicate<? super Animal> predicate) {
+	protected List<Animal> getAnimals(Predicate<? super Animal> predicate) {
 		return Collections.unmodifiableList(getAnimals().stream().filter(predicate).toList());
 	}
 
