@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -34,6 +36,7 @@ import simulator.model.Animal;
 import simulator.model.Region;
 import simulator.model.SelectionStrategy;
 import simulator.model.Simulator;
+import simulator.view.MainWindow;
 
 public class Main {
 
@@ -66,7 +69,7 @@ public class Main {
 	private static Double _time = null;
 	private static String _in_file = null;
 	private static String _out_file = null;
-	private static ExecMode _mode = ExecMode.BATCH;
+	private static ExecMode _mode = null;
 	public static Double _dt = null;
 	private static boolean _sv = false;
 	public static Factory<SelectionStrategy> selection_strategy_factory;
@@ -90,6 +93,7 @@ public class Main {
 			parse_out_file_option(line);
 			parse_dt_option(line);
 			parse_sv_option(line);
+			parse_mode_option(line);
 			// if there are some remaining arguments, then something wrong is
 			// provided in the command line!
 			//
@@ -132,7 +136,10 @@ public class Main {
 				.desc("An real number representing the total simulation time in seconds. Default value: "
 						+ _default_time + ".")
 				.build());
-
+		
+		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").hasArg().desc("Execution Mode. Possible values: 'batch' (Batch\n"
+				+ "mode), 'gui' (Graphical User Interface mode).\n"
+				+ "Default value: 'gui'.").build());
 		return cmdLineOptions;
 	}
 
@@ -181,7 +188,16 @@ public class Main {
 			throw new ParseException("Invalid value for time: " + dt);
 		}
 	}
-
+	
+	private static void parse_mode_option(CommandLine line) throws ParseException {
+		String m = line.getOptionValue("m", ExecMode.GUI.toString());
+		try {
+			_mode = ExecMode.valueOf(m.toUpperCase());
+			
+		} catch (Exception e) {
+			throw new ParseException("Invalid value for mode: " + m);
+		}
+	}
 	private static void init_factories() {
 		// SelectionStrategies
 		List<Builder<SelectionStrategy>> selection_strategy_builders = new ArrayList<>();
@@ -224,7 +240,14 @@ public class Main {
 	}
 
 	private static void start_GUI_mode() throws Exception {
-		throw new UnsupportedOperationException("GUI mode is not ready yet ...");
+		InputStream is = new FileInputStream(new File(_in_file));
+		JSONObject input = load_JSON_file(is);
+
+		Simulator so = new Simulator(input.getInt("cols"), input.getInt("rows"), input.getInt("width"),
+				input.getInt("height"), animal_factory, region_factory);
+		Controller co = new Controller(so);
+		co.load_data(input);
+		SwingUtilities.invokeAndWait(() -> new MainWindow(co));
 	}
 
 	private static void start(String[] args) throws Exception {

@@ -143,8 +143,10 @@ public class Sheep extends Animal {
 				break;
 			case DANGER:
 				danger_state_update(dt);
+				break;
 			case MATE:
 				mate_state_update(dt);
+				break;
 			default:
 				break;
 		}

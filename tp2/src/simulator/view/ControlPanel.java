@@ -14,7 +14,7 @@ import simulator.misc.Utils;
 
 public class ControlPanel extends JPanel {
 	private Controller _ctrl;
-	private ChangeRegionsDialog _changeRegionsDialog;
+	//private ChangeRegionsDialog _changeRegionsDialog;
 	private JToolBar _toolaBar;
 	private JFileChooser _fc;
 	private boolean _stopped = true; // utilizado en los botones de run/stop
@@ -40,7 +40,7 @@ public class ControlPanel extends JPanel {
 		_quitButton = new JButton();
 		_quitButton.setToolTipText("Quit");
 		_quitButton.setIcon(new ImageIcon("resources/icons/exit.png"));
-		_quitButton.addActionListener((e) -> Utils.quit(this));
+		//_quitButton.addActionListener((e) -> Utils.quit(this));
 		_toolaBar.add(_quitButton);
 		// TODO Inicializar _fc con una instancia de JFileChooser. Para que siempre
 		// abre en la carpeta de ejemplos puedes usar:

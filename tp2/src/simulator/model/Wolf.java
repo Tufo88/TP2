@@ -146,8 +146,10 @@ public class Wolf extends Animal {
 				break;
 			case HUNGER:
 				hunger_state_update(dt);
+				break;
 			case MATE:
 				mate_state_update(dt);
+				break;
 			default:
 				break;
 		}
