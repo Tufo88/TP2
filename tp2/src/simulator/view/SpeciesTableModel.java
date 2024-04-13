@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -14,13 +15,15 @@ import simulator.model.MapInfo;
 import simulator.model.RegionInfo;
 import simulator.model.State;
 
+@SuppressWarnings("serial")
 public class SpeciesTableModel extends AbstractTableModel implements EcoSysObserver {
 	Map<String, Map<State, Integer>> _data;//mapa de genetic code a mapa de state a num de animales en ese state
 	
 	private static List<String> columnNames;
 
 	SpeciesTableModel(Controller ctrl) {
-		_data = new HashMap();
+		//TODO a lo mejor treeMap?
+		_data = new HashMap<String, Map<State, Integer>>();
 
 		columnNames = new ArrayList<String>();
 		columnNames.add("Species");
@@ -45,11 +48,11 @@ public class SpeciesTableModel extends AbstractTableModel implements EcoSysObser
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		String key = _data.keySet().toArray(new String[_data.size()])[rowIndex];
+		
 		if(columnIndex == 0) {
-			return _data.keySet().toArray(new String[_data.size()])[rowIndex];
+			return key;
 		} else {
-			String key = _data.keySet().toArray(new String[_data.size()])[rowIndex];
-			
 			return _data.get(key).get(State.values()[columnIndex-1]);
 		}
 		

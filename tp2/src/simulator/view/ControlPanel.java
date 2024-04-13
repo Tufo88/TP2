@@ -1,6 +1,7 @@
 package simulator.view;
 
 import java.awt.BorderLayout;
+import icons.ICONS;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -20,7 +21,7 @@ public class ControlPanel extends JPanel {
 	private boolean _stopped = true; // utilizado en los botones de run/stop
 	private JButton _quitButton;
 	
-	// TODO añade más atributos aquí …
+	// TODO aï¿½ade mï¿½s atributos aquï¿½ ï¿½
 	public ControlPanel(Controller ctrl) {
 	_ctrl = ctrl;
 	initGUI();
@@ -30,24 +31,24 @@ public class ControlPanel extends JPanel {
 		setLayout(new BorderLayout());
 		_toolaBar = new JToolBar();
 		add(_toolaBar, BorderLayout.PAGE_START);
-		// TODO crear los diferentes botones/atributos y añadirlos a _toolaBar.
+		// TODO crear los diferentes botones/atributos y aï¿½adirlos a _toolaBar.
 		// Todos ellos han de tener su correspondiente tooltip. Puedes utilizar
-		// _toolaBar.addSeparator() para añadir la línea de separación vertical
+		// _toolaBar.addSeparator() para aï¿½adir la lï¿½nea de separaciï¿½n vertical
 		// entre las componentes que lo necesiten.
 		// Quit Button
 		_toolaBar.add(Box.createGlue()); // this aligns the button to the right
 		_toolaBar.addSeparator();
 		_quitButton = new JButton();
 		_quitButton.setToolTipText("Quit");
-		_quitButton.setIcon(new ImageIcon("resources/icons/exit.png"));
+		_quitButton.setIcon(new ImageIcon(ICONS.class.getResource("exit.png")));
 		//_quitButton.addActionListener((e) -> Utils.quit(this));
 		_toolaBar.add(_quitButton);
 		// TODO Inicializar _fc con una instancia de JFileChooser. Para que siempre
 		// abre en la carpeta de ejemplos puedes usar:
 		//
 		// _fc.setCurrentDirectory(new File(System.getProperty("user.dir") + "/resources/examples"));
-		// TODO Inicializar _changeRegionsDialog con instancias del diálogo de cambio
+		// TODO Inicializar _changeRegionsDialog con instancias del diï¿½logo de cambio
 		// de regiones
 		}
-		// TODO el resto de métodos van aquí…
+		// TODO el resto de mï¿½todos van aquï¿½
 		}
