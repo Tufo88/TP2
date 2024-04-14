@@ -73,8 +73,8 @@ public class Main {
 	public static Double _dt = null;
 	private static boolean _sv = false;
 	public static Factory<SelectionStrategy> selection_strategy_factory;
-	public static Factory<Region> region_factory;
-	public static Factory<Animal> animal_factory;
+	public static Factory<Region> _regions_factory;
+	public static Factory<Animal> _animals_factory;
 
 	private static void parse_args(String[] args) {
 
@@ -211,13 +211,13 @@ public class Main {
 		region_builders.add(new DefaultRegionBuilder());
 		region_builders.add(new DynamicSupplyRegionBuilder());
 
-		region_factory = new BuilderBasedFactory<Region>(region_builders);
+		_regions_factory = new BuilderBasedFactory<Region>(region_builders);
 
 		List<Builder<Animal>> animal_builders = new ArrayList<>();
 		animal_builders.add(new SheepBuilder(selection_strategy_factory));
 		animal_builders.add(new WolfBuilder(selection_strategy_factory));
 
-		animal_factory = new BuilderBasedFactory<Animal>(animal_builders);
+		_animals_factory = new BuilderBasedFactory<Animal>(animal_builders);
 
 	}
 
@@ -232,7 +232,7 @@ public class Main {
 
 		OutputStream os = new FileOutputStream(new File(_out_file));
 		Simulator so = new Simulator(input.getInt("cols"), input.getInt("rows"), input.getInt("width"),
-				input.getInt("height"), animal_factory, region_factory);
+				input.getInt("height"), _animals_factory, _regions_factory);
 		Controller co = new Controller(so);
 		co.load_data(input);
 		co.run(_time, _dt, _sv, os);
@@ -244,7 +244,7 @@ public class Main {
 		JSONObject input = load_JSON_file(is);
 
 		Simulator so = new Simulator(input.getInt("cols"), input.getInt("rows"), input.getInt("width"),
-				input.getInt("height"), animal_factory, region_factory);
+				input.getInt("height"), _animals_factory, _regions_factory);
 		Controller co = new Controller(so);
 		co.load_data(input);
 		SwingUtilities.invokeAndWait(() -> new MainWindow(co));
