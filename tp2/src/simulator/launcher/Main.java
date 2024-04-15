@@ -75,6 +75,7 @@ public class Main {
 	public static Factory<SelectionStrategy> selection_strategy_factory;
 	public static Factory<Region> _regions_factory;
 	public static Factory<Animal> _animals_factory;
+	private static JSONObject _JSONinput;
 
 	private static void parse_args(String[] args) {
 
@@ -136,10 +137,13 @@ public class Main {
 				.desc("An real number representing the total simulation time in seconds. Default value: "
 						+ _default_time + ".")
 				.build());
-		
-		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").hasArg().desc("Execution Mode. Possible values: 'batch' (Batch\n"
-				+ "mode), 'gui' (Graphical User Interface mode).\n"
-				+ "Default value: 'gui'.").build());
+
+		cmdLineOptions
+				.addOption(
+						Option.builder("m").longOpt("mode").hasArg()
+								.desc("Execution Mode. Possible values: 'batch' (Batch\n"
+										+ "mode), 'gui' (Graphical User Interface mode).\n" + "Default value: 'gui'.")
+								.build());
 		return cmdLineOptions;
 	}
 
@@ -188,16 +192,17 @@ public class Main {
 			throw new ParseException("Invalid value for time: " + dt);
 		}
 	}
-	
+
 	private static void parse_mode_option(CommandLine line) throws ParseException {
 		String m = line.getOptionValue("m", ExecMode.GUI.toString());
 		try {
 			_mode = ExecMode.valueOf(m.toUpperCase());
-			
+
 		} catch (Exception e) {
 			throw new ParseException("Invalid value for mode: " + m);
 		}
 	}
+
 	private static void init_factories() {
 		// SelectionStrategies
 		List<Builder<SelectionStrategy>> selection_strategy_builders = new ArrayList<>();
@@ -240,13 +245,20 @@ public class Main {
 	}
 
 	private static void start_GUI_mode() throws Exception {
-		InputStream is = new FileInputStream(new File(_in_file));
-		JSONObject input = load_JSON_file(is);
+		if (_in_file != null) {
+			InputStream is = new FileInputStream(new File(_in_file));
+			_JSONinput = load_JSON_file(is);
+		}
+		Simulator so;
+		if (_JSONinput != null)
+			so = new Simulator(_JSONinput.getInt("cols"), _JSONinput.getInt("rows"), _JSONinput.getInt("width"),
+					_JSONinput.getInt("height"), _animals_factory, _regions_factory);
+		else
+			so = new Simulator(20, 15, 800, 600, _animals_factory, _regions_factory);
 
-		Simulator so = new Simulator(input.getInt("cols"), input.getInt("rows"), input.getInt("width"),
-				input.getInt("height"), _animals_factory, _regions_factory);
 		Controller co = new Controller(so);
-		co.load_data(input);
+		if (_JSONinput != null)
+			co.load_data(_JSONinput);
 		SwingUtilities.invokeAndWait(() -> new MainWindow(co));
 	}
 

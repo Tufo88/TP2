@@ -140,18 +140,18 @@ public class Wolf extends Animal {
 
 	@Override
 	protected void stateLogic(double dt) {
-		switch(this.get_state()) {
-			case NORMAL:
-				normal_state_update(dt);
-				break;
-			case HUNGER:
-				hunger_state_update(dt);
-				break;
-			case MATE:
-				mate_state_update(dt);
-				break;
-			default:
-				break;
+		switch (this.get_state()) {
+		case NORMAL:
+			normal_state_update(dt);
+			break;
+		case HUNGER:
+			hunger_state_update(dt);
+			break;
+		case MATE:
+			mate_state_update(dt);
+			break;
+		default:
+			break;
 		}
 	}
 }

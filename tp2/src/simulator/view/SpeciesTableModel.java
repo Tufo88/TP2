@@ -17,12 +17,12 @@ import simulator.model.State;
 
 @SuppressWarnings("serial")
 public class SpeciesTableModel extends AbstractTableModel implements EcoSysObserver {
-	Map<String, Map<State, Integer>> _data;//mapa de genetic code a mapa de state a num de animales en ese state
-	
+	Map<String, Map<State, Integer>> _data;// mapa de genetic code a mapa de state a num de animales en ese state
+
 	private static List<String> columnNames;
 
 	SpeciesTableModel(Controller ctrl) {
-		//TODO a lo mejor treeMap?
+		// TODO a lo mejor treeMap?
 		_data = new HashMap<String, Map<State, Integer>>();
 
 		columnNames = new ArrayList<String>();
@@ -30,7 +30,7 @@ public class SpeciesTableModel extends AbstractTableModel implements EcoSysObser
 		for (State st : State.values()) {
 			columnNames.add(st.name());
 		}
-		
+
 		ctrl.addObserver(this);
 	}
 
@@ -42,27 +42,27 @@ public class SpeciesTableModel extends AbstractTableModel implements EcoSysObser
 
 	@Override
 	public int getColumnCount() {
-		
+
 		return columnNames.size();
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		String key = _data.keySet().toArray(new String[_data.size()])[rowIndex];
-		
-		if(columnIndex == 0) {
+
+		if (columnIndex == 0) {
 			return key;
 		} else {
-			return _data.get(key).get(State.values()[columnIndex-1]);
+			return _data.get(key).get(State.values()[columnIndex - 1]);
 		}
-		
+
 	}
 
 	@Override
 	public String getColumnName(int col) {
 		return columnNames.get(col);
 	}
-	
+
 	@Override
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
 		registerAll(animals);
@@ -78,17 +78,22 @@ public class SpeciesTableModel extends AbstractTableModel implements EcoSysObser
 	@Override
 	public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
 		Map<State, Integer> info = _data.get(a.get_genetic_code());
-		if(info != null) {
+		if (info != null) {
 			int am = info.get(a.get_state());
-			info.put(a.get_state(), am+1);
+			info.put(a.get_state(), am + 1);
 			_data.put(a.get_genetic_code(), info);
+		}
+		else {
+			_data.put(a.get_genetic_code(), new HashMap());
+			info = _data.get(a.get_genetic_code());
+			info.put(a.get_state(), 1);
 		}
 		fireTableDataChanged();
 	}
 
 	@Override
 	public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
-
+		return;
 	}
 
 	@Override
@@ -99,30 +104,30 @@ public class SpeciesTableModel extends AbstractTableModel implements EcoSysObser
 	}
 
 	private void registerAll(List<AnimalInfo> animals) {
-		for(AnimalInfo a: animals) {
+		for (AnimalInfo a : animals) {
 			Map<State, Integer> info = _data.get(a.get_genetic_code());
-			if(info != null) {
-				if(info.get(a.get_state()) == null) {
+			if (info != null) {
+				if (info.get(a.get_state()) == null) {
 					info.put(a.get_state(), 1);
 				} else {
 					int am = info.get(a.get_state());
-					info.put(a.get_state(), am+1);
+					info.put(a.get_state(), am + 1);
 					_data.put(a.get_genetic_code(), info);
 				}
-				
+
 			} else {
 				HashMap<State, Integer> m = new HashMap<State, Integer>();
 				m.put(a.get_state(), 1);
 				_data.put(a.get_genetic_code(), m);
 			}
 		}
-		
-		for(String k: _data.keySet()) {
+
+		for (String k : _data.keySet()) {
 			Map<State, Integer> m = _data.get(k);
 			for (State st : State.values()) {
 				m.putIfAbsent(st, 0);
-				}
-			_data.put(k, m);		
+			}
+			_data.put(k, m);
 		}
 	}
 }

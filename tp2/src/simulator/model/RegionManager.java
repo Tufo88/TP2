@@ -25,32 +25,35 @@ public class RegionManager implements AnimalMapView {
 	class MyIterator implements Iterator<RegionData> {
 		private int _row = 0;
 		private int _col = 0;
+
 		@Override
 		public boolean hasNext() {
-			
+
 			return _row < _rows && _col < _cols;
 		}
 
 		@Override
 		public RegionData next() {
 			Region r = _regions[_row][_col];
-			
+
 			_row += (_col + 1) / _cols;
-			_col = (_col + 1) % _cols; 
-			
+			_col = (_col + 1) % _cols;
+
 			return new RegionData(_row, _col, r);
 		}
-		
+
 	}
+
 	public RegionManager(int cols, int rows, int width, int height) throws IllegalArgumentException {
 		if (width < cols)
 			throw new IllegalArgumentException("Width has to be greater than cols"); // if width < cols, region_width =
 																						// 0
 		if (height < rows)
 			throw new IllegalArgumentException("Height has to be greater than rows");
-		
-		if (width % cols != 0 || height % rows != 0) throw new IllegalArgumentException("Width and Height must be divisible by cols and rows");
-			
+
+		if (width % cols != 0 || height % rows != 0)
+			throw new IllegalArgumentException("Width and Height must be divisible by cols and rows");
+
 		this._cols = cols;
 		this._rows = rows;
 
@@ -66,7 +69,7 @@ public class RegionManager implements AnimalMapView {
 	}
 
 	private void initRegions() {
-		
+
 		_regions = new Region[_rows][_cols];
 		for (int i = 0; i < this._rows; i++) {
 			for (int j = 0; j < this._cols; j++) {
@@ -91,7 +94,8 @@ public class RegionManager implements AnimalMapView {
 	}
 
 	private Region getRegionFromAnimal(Animal a) {
-		return _regions[(int) (a.get_position().getY() / _region_height)][((int) a.get_position().getX() / _region_width)];
+		return _regions[(int) (a.get_position().getY() / _region_height)][((int) a.get_position().getX()
+				/ _region_width)];
 	}
 
 	void register_animal(Animal a) {
@@ -119,11 +123,10 @@ public class RegionManager implements AnimalMapView {
 			return;
 
 		unregister_animal(a);
-		
+
 		r.add_animal(a);
 		_animal_region.put(a, r);
-		
-		
+
 	}
 
 	void update_all_regions(double dt) {
@@ -178,7 +181,7 @@ public class RegionManager implements AnimalMapView {
 		int maxRangeJ = (int) e.get_sight_range() / _region_width;
 
 		List<Animal> a = new ArrayList<Animal>();
-		
+
 //		for(RegionData r : this) {
 //			if (r.row() <= regActI + maxRangeI && r.row() >= regActI - maxRangeI && r.col() <= regActJ + maxRangeJ
 //					&& r.col() >= regActJ - maxRangeJ) {
@@ -203,18 +206,18 @@ public class RegionManager implements AnimalMapView {
 	@Override
 	public JSONObject as_JSON() {
 		JSONObject obj = new JSONObject();
-		
-		for(RegionData r : this) {
+
+		for (RegionData r : this) {
 			JSONObject reg_obj = new JSONObject().put("row", r.row()).put("col", r.col()).put("data", r.r().as_JSON());
 			obj.append("regiones", reg_obj);
 		}
-		
+
 		return obj;
 	}
 
 	@Override
 	public Iterator<RegionData> iterator() {
-		
+
 		return new MyIterator();
 	}
 

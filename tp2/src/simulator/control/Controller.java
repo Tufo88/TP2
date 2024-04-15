@@ -34,7 +34,7 @@ public class Controller {
 				JSONArray row = jObj.getJSONArray("row");
 				int rf = row.getInt(0), rt = row.getInt(1);
 
-				JSONArray col = jObj.getJSONArray("row");
+				JSONArray col = jObj.getJSONArray("col");
 				int cf = col.getInt(0), ct = col.getInt(1);
 
 				JSONObject spec = jObj.getJSONObject("spec");

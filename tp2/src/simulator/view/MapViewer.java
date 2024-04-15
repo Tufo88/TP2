@@ -165,7 +165,8 @@ public class MapViewer extends AbstractMapViewer {
 		// TODO Dibujar la etiqueta del tiempo. Para escribir solo 3 decimales puede
 		// usar String.format("%.3f", time)
 
-		// TODO Dibujar la información de todas la especies. Al final de cada iteración
+		// TODO Dibujar la información de todas la especies. Al final de cada
+		// iteración
 		// poner el contador de la especie correspondiente a 0 (para resetear el cuento)
 		for (Entry<String, SpeciesInfo> e : _kindsInfo.entrySet()) {
 		}

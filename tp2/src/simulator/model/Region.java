@@ -32,9 +32,9 @@ public abstract class Region implements FoodSupplier, RegionInfo, Entity {
 	}
 
 	public List<AnimalInfo> getAnimalsInfo() {
-		return Collections.unmodifiableList(list); 
+		return Collections.unmodifiableList(list);
 	}
-	
+
 	public JSONObject as_JSON() {
 
 		JSONObject obj = new JSONObject();

@@ -24,7 +24,7 @@ public class InfoTable extends JPanel {
 	private void initGUI() {
 		this.setLayout(new BorderLayout());
 		this.setBorder(new TitledBorder(_title));
-		
+
 		JTable _modelTable = new JTable(_tableModel);
 
 		this.add(new JScrollPane(_modelTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,

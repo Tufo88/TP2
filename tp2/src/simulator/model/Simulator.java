@@ -16,7 +16,7 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 
 	RegionManager _reg_mngr;
 	List<Animal> _animals;
-	
+
 	List<EcoSysObserver> _observers;
 	double _time;
 
@@ -34,9 +34,9 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 		_animals = new ArrayList<Animal>();
 		_observers = new ArrayList<EcoSysObserver>();
 	}
-	
+
 	public void reset(int cols, int rows, int width, int height) {
-		
+
 		_animals.clear();
 		_reg_mngr = new RegionManager(cols, rows, width, height);
 		_time = 0.0;
@@ -58,7 +58,7 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 	private void add_animal(Animal a) {
 		_animals.add(a);
 		_reg_mngr.register_animal(a);
-		
+
 		_observers.forEach((o) -> o.onAnimalAdded(get_time(), get_map_info(), get_animals_info(), a));
 	}
 
@@ -71,10 +71,11 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 	public MapInfo get_map_info() {
 		return _reg_mngr;
 	}
-	
+
 	public List<AnimalInfo> get_animals_info() {
 		return Collections.unmodifiableList(_animals);
 	}
+
 	public double get_time() {
 		return _time;
 	}
@@ -94,7 +95,7 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 		}
 
 		i = _animals.iterator();
-		while (i.hasNext()) { 
+		while (i.hasNext()) {
 			Animal a = i.next();
 			a.update(dt);
 			_reg_mngr.update_animal_region(a);
@@ -111,10 +112,10 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 				newAnimals.add(b);
 			}
 		}
-		
+
 		_animals.addAll(newAnimals); // hacemos el _animals.add(a) que tambien hace el add_animal
 		_reg_mngr.update_all_regions(dt);
-		
+
 		_observers.forEach((o) -> o.onAdvance(get_time(), get_map_info(), get_animals_info(), dt));
 	}
 
@@ -132,6 +133,6 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 	@Override
 	public void removeObserver(EcoSysObserver o) {
 		_observers.remove(o);
-		
+
 	}
 }

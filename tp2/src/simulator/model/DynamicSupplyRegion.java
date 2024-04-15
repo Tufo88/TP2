@@ -34,7 +34,7 @@ public class DynamicSupplyRegion extends Region {
 			_food += dt * _factor;
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return "dynamic";

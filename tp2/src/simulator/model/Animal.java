@@ -111,7 +111,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 	private boolean isInsideRectangle(int x1, int x2, int y1, int y2) { // xi anchura yi altura
 		return _pos.getX() <= x2 && _pos.getX() >= x1 && _pos.getY() <= y2 && _pos.getY() >= y1;
 	}
-	
+
 	boolean isInMap() {
 		return isInsideRectangle(0, _region_mngr.get_width() - 1, 0, _region_mngr.get_height() - 1);
 	}
@@ -189,7 +189,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 	public final double distanceTo(Animal a) {
 		return this._pos.distanceTo(a.get_position());
 	}
-	
+
 	protected void setDesire(double x) {
 		_desire = x;
 	}
@@ -208,7 +208,6 @@ public abstract class Animal implements Entity, AnimalInfo {
 	protected boolean isInSight(Animal a) {
 		return _pos.distanceTo(a._pos) <= _sight_range;
 	}
-	
 
 	protected void matingLogic() {
 		setDesire(_MIN_DESIRE);
