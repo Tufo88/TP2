@@ -36,7 +36,6 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 	}
 
 	public void reset(int cols, int rows, int width, int height) {
-
 		_animals.clear();
 		_reg_mngr = new RegionManager(cols, rows, width, height);
 		_time = 0.0;

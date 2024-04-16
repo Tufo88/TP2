@@ -18,6 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.json.JSONException;
@@ -60,10 +62,6 @@ public class ControlPanel extends JPanel {
 		setLayout(new BorderLayout());
 		_toolBar = new JToolBar();
 		add(_toolBar, BorderLayout.PAGE_START);
-		// TODO crear los diferentes botones/atributos y a�adirlos a _toolaBar.
-		// Todos ellos han de tener su correspondiente tooltip. Puedes utilizar
-		// _toolaBar.addSeparator() para a�adir la l�nea de separaci�n vertical
-		// entre las componentes que lo necesiten.
 
 		// Load button
 		_loadFileButton = new JButton();
@@ -91,7 +89,7 @@ public class ControlPanel extends JPanel {
 				_configFile = _fc.getSelectedFile();
 				try {
 					JSONObject data = new JSONObject(new JSONTokener(new FileInputStream(_configFile)));
-					_ctrl.reset(data.getInt("cols"), data.getInt("rows"), data.getInt("width"),						data.getInt("height"));
+					_ctrl.reset(data.getInt("cols"), data.getInt("rows"), data.getInt("width"), data.getInt("height"));
 					_ctrl.load_data(data);
 				} catch (Exception ex) {
 					ViewUtils.showErrorMsg(ex.getLocalizedMessage());
@@ -128,18 +126,39 @@ public class ControlPanel extends JPanel {
 		this._runButton.setToolTipText("Run simulation");
 		this._runButton.setIcon(new ImageIcon(ICONS.class.getResource("run.png")));
 		_toolBar.add(_runButton);
+		
+		_runButton.addActionListener((e) -> {
+			setOtherButtons(false);
+			_stopped = false;
+			try {
+				
+				run_sim((int) _stepsSpinner.getValue(), Double.parseDouble(_deltaTimeText.getText()));
+			} catch (NumberFormatException ex) {
+				ViewUtils.showErrorMsg("Delta time is not valid double");
+				setOtherButtons(true);
+				_stopped = true;
+			}
+			
+		});
 
 		// stop button
 		_stopButton = new JButton();
 		this._stopButton.setToolTipText("Stop simulation");
 		this._stopButton.setIcon(new ImageIcon(ICONS.class.getResource("stop.png")));
+		
+		_stopButton.addActionListener((e) -> {
+			_stopped = true;
+		});
+		
 		_toolBar.add(_stopButton);
 		_toolBar.addSeparator();
 
 		JLabel stepsLabel = new JLabel("Steps: ");
 		_toolBar.add(stepsLabel);
 
-		(_stepsSpinner = new JSpinner()).setValue(10000);
+		_stepsSpinner = new JSpinner();
+		_stepsSpinner.setModel(new SpinnerNumberModel(10000, 0, 100000, 100));
+		_stepsSpinner.setToolTipText("Simulation steps to run");
 		_toolBar.add(_stepsSpinner);
 
 		_toolBar.addSeparator(new Dimension(4, 4));
@@ -147,6 +166,7 @@ public class ControlPanel extends JPanel {
 		JLabel deltaTimeLabel = new JLabel("Delta-time: ");
 		_toolBar.add(deltaTimeLabel);
 		this._deltaTimeText = new JTextField("0.03");
+		_deltaTimeText.setToolTipText("Time difference between each step");
 		_toolBar.add(this._deltaTimeText);
 
 		_toolBar.add(Box.createGlue()); // this aligns the button to the right
@@ -161,5 +181,29 @@ public class ControlPanel extends JPanel {
 		//
 
 	}
-	// TODO el resto de m�todos van aqu�
+
+	private void run_sim(int n, double dt) {
+		if (n > 0 && !_stopped) {
+			try {
+				_ctrl.advance(dt);
+				SwingUtilities.invokeLater(() -> run_sim(n - 1, dt));
+			} catch (Exception e) {
+				ViewUtils.showErrorMsg(e.getLocalizedMessage());
+				setOtherButtons(true);
+				_stopped = true;
+			}
+		} else {
+			setOtherButtons(true);
+			_stopped = true;
+		}
+	}
+	
+	private void setOtherButtons(boolean atrib) {
+		this._loadFileButton.setEnabled(atrib);
+		this._changeRegionsButton.setEnabled(atrib);
+		this._mapViewerButton.setEnabled(atrib);
+		this._quitButton.setEnabled(atrib);
+		this._deltaTimeText.setEnabled(atrib);
+		this._stepsSpinner.setEnabled(atrib);
+	}
 }

@@ -71,23 +71,13 @@ public class SpeciesTableModel extends AbstractTableModel implements EcoSysObser
 
 	@Override
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
-		_data.clear();
+		this.clearMap();
 		fireTableDataChanged();
 	}
 
 	@Override
 	public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
-		Map<State, Integer> info = _data.get(a.get_genetic_code());
-		if (info != null) {
-			int am = info.get(a.get_state());
-			info.put(a.get_state(), am + 1);
-			_data.put(a.get_genetic_code(), info);
-		}
-		else {
-			_data.put(a.get_genetic_code(), new HashMap());
-			info = _data.get(a.get_genetic_code());
-			info.put(a.get_state(), 1);
-		}
+		updateStateMap(_data.get(a.get_genetic_code()), a);
 		fireTableDataChanged();
 	}
 
@@ -98,36 +88,42 @@ public class SpeciesTableModel extends AbstractTableModel implements EcoSysObser
 
 	@Override
 	public void onAdvance(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
-		_data.clear();
+		this.clearMap();
 		registerAll(animals);
 		fireTableDataChanged();
 	}
 
 	private void registerAll(List<AnimalInfo> animals) {
 		for (AnimalInfo a : animals) {
-			Map<State, Integer> info = _data.get(a.get_genetic_code());
-			if (info != null) {
-				if (info.get(a.get_state()) == null) {
-					info.put(a.get_state(), 1);
-				} else {
-					int am = info.get(a.get_state());
-					info.put(a.get_state(), am + 1);
-					_data.put(a.get_genetic_code(), info);
-				}
-
-			} else {
-				HashMap<State, Integer> m = new HashMap<State, Integer>();
-				m.put(a.get_state(), 1);
-				_data.put(a.get_genetic_code(), m);
-			}
+			updateStateMap(_data.get(a.get_genetic_code()), a);
 		}
+			
+	}
 
+	private void clearMap() {
+		
 		for (String k : _data.keySet()) {
 			Map<State, Integer> m = _data.get(k);
-			for (State st : State.values()) {
-				m.putIfAbsent(st, 0);
-			}
-			_data.put(k, m);
+			for (State st : State.values()) m.put(st, 0);			
 		}
+		
 	}
+	
+	
+	private void updateStateMap(Map<State, Integer> info, AnimalInfo i) {
+		if (info == null) { //si no existe el mapa creamos un nuevo mapa que añada todos los posibles estados
+			
+			HashMap<State, Integer> m = new HashMap<State, Integer>();
+			for (State st : State.values()) {
+				m.put(st, 0);
+			}
+			_data.put(i.get_genetic_code(), m);
+			
+		}
+			
+		info = _data.get(i.get_genetic_code());
+		int am = info.get(i.get_state());
+		info.put(i.get_state(), am + 1);
+	}
+
 }

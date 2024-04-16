@@ -3,6 +3,7 @@ package simulator.view;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class RegionsTableModel extends AbstractTableModel implements EcoSysObser
 	}
 
 	List<Info> _cells;
-
+	
 	List<String> _columnNames;
 
 	int _syscols;
@@ -81,10 +82,12 @@ public class RegionsTableModel extends AbstractTableModel implements EcoSysObser
 
 			_cells.add(new Info(reg.r().toString(), new HashMap<>()));
 
-			for (Diet val : Diet.values()) {
-				_cells.get(_cells.size() - 1).map.put(val, 0);
-			}
+			initMapfromCell(_cells.size() - 1);
+			
+			this.insertAnimalsinMap(_cells.size() - 1, reg.r().getAnimalsInfo());
 		}
+		
+		fireTableDataChanged();
 
 	}
 
@@ -97,19 +100,70 @@ public class RegionsTableModel extends AbstractTableModel implements EcoSysObser
 
 	@Override
 	public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
+		int i = 0;
 		
+		Iterator<RegionData> it = map.iterator();
+		while (it.hasNext() && !it.next().r().getAnimalsInfo().contains(a)) { //sale cuando lo encontremos
+			i++;
+		}
+		
+		Info info = _cells.get(i); //suponemos que todo animal que busquemos lo encontraremos porque no tendria sentido que no lo encontrasemos
+		int actualAmount =  info.map.get(a.get_diet());
+		info.map.put(a.get_diet(), actualAmount + 1);
 	}
 
 	@Override
 	public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
-		// TODO Auto-generated method stub
+		
+		int pos = this._syscols*row + col;
+		Info info = new Info(r.toString(), new HashMap<>());
+		
+		_cells.set(pos, info);
+		this.initMapfromCell(pos);
+		this.insertAnimalsinMap(pos, r.getAnimalsInfo());
+		
+		fireTableDataChanged();
 
 	}
 
 	@Override
 	public void onAdvance(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
-		// TODO Auto-generated method stub
+		clearMaps();
+		insertAnimalsInCells(map);
+		fireTableDataChanged();
 
+	}
+	
+	private void clearMaps() {
+		for (Info cell : _cells) {
+			for (Diet val : Diet.values()) {
+				cell.map.put(val, 0);
+			}
+		}
+	}
+
+	private void initMapfromCell(int pos) {
+		for (Diet val : Diet.values()) {
+			_cells.get(pos).map.put(val, 0);
+		}
+	}
+
+	private void insertAnimalsInCells(MapInfo map) {
+		int i = 0;
+		for (RegionData reg : map) {
+			insertAnimalsinMap(i, reg.r().getAnimalsInfo());
+			
+			i++;
+		}
+	}
+
+	private void insertAnimalsinMap(int i, List<AnimalInfo> animals) {
+		for (AnimalInfo a : animals) {
+			
+			int num =_cells.get(i).map().get(a.get_diet());
+			_cells.get(i).map().put(a.get_diet(), num+1);
+		
+		}
 	}
 
 }

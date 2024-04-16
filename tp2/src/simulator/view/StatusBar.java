@@ -52,7 +52,7 @@ public class StatusBar extends JPanel implements EcoSysObserver {
 
 	@Override
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
-		this._actualTime.setText(String.valueOf(time));
+		this._actualTime.setText(String.format("%.2f", time));
 		this._actualAnimals.setText(String.valueOf(animals.size()));
 		this._actualDimensions.setText(
 				String.format("%dx%d %dx%d", map.get_width(), map.get_height(), map.get_rows(), map.get_cols()));
@@ -60,25 +60,24 @@ public class StatusBar extends JPanel implements EcoSysObserver {
 
 	@Override
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
-		// TODO Auto-generated method stub
+		onRegister(time, map, animals);
 
 	}
 
 	@Override
 	public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
-		// TODO Auto-generated method stub
-
+		this._actualTime.setText(String.format("%.2f", time));
+		this._actualAnimals.setText(String.valueOf(animals.size()));
 	}
 
 	@Override
 	public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
-		// TODO Auto-generated method stub
-
+		return;
 	}
 
 	@Override
 	public void onAdvance(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
-		// TODO Auto-generated method stub
-
+		this._actualTime.setText(String.format("%.2f", time));
+		this._actualAnimals.setText(String.valueOf(animals.size()));
 	}
 }

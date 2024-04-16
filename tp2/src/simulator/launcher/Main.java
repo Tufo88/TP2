@@ -72,7 +72,7 @@ public class Main {
 	private static ExecMode _mode = null;
 	public static Double _dt = null;
 	private static boolean _sv = false;
-	public static Factory<SelectionStrategy> selection_strategy_factory;
+	public static Factory<SelectionStrategy> _selection_strategy_factory;
 	public static Factory<Region> _regions_factory;
 	public static Factory<Animal> _animals_factory;
 	private static JSONObject _JSONinput;
@@ -210,7 +210,7 @@ public class Main {
 		selection_strategy_builders.add(new SelectClosestBuilder());
 		selection_strategy_builders.add(new SelectYoungestBuilder());
 
-		selection_strategy_factory = new BuilderBasedFactory<SelectionStrategy>(selection_strategy_builders);
+		_selection_strategy_factory = new BuilderBasedFactory<SelectionStrategy>(selection_strategy_builders);
 
 		List<Builder<Region>> region_builders = new ArrayList<>();
 		region_builders.add(new DefaultRegionBuilder());
@@ -219,8 +219,8 @@ public class Main {
 		_regions_factory = new BuilderBasedFactory<Region>(region_builders);
 
 		List<Builder<Animal>> animal_builders = new ArrayList<>();
-		animal_builders.add(new SheepBuilder(selection_strategy_factory));
-		animal_builders.add(new WolfBuilder(selection_strategy_factory));
+		animal_builders.add(new SheepBuilder(_selection_strategy_factory));
+		animal_builders.add(new WolfBuilder(_selection_strategy_factory));
 
 		_animals_factory = new BuilderBasedFactory<Animal>(animal_builders);
 
