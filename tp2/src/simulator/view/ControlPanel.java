@@ -102,14 +102,16 @@ public class ControlPanel extends JPanel {
 		_toolBar.addSeparator();
 
 		// Map viewer button
-
 		this._mapViewerButton = new JButton();
 		this._mapViewerButton.setToolTipText("Show Map");
 		this._mapViewerButton.setIcon(new ImageIcon(ICONS.class.getResource("viewer.png")));
 		_toolBar.add(this._mapViewerButton);
 
+		_mapViewerButton.addActionListener((e) -> {
+			new MapWindow(ViewUtils.getWindow(this), _ctrl);
+		});
+		
 		// Change regions button
-
 		this._changeRegionsButton = new JButton();
 		this._changeRegionsButton.setToolTipText("Change regions");
 		this._changeRegionsButton.setIcon(new ImageIcon(ICONS.class.getResource("regions.png")));
