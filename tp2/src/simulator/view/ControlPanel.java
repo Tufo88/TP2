@@ -30,20 +30,21 @@ import examples.EXAMPLES;
 import simulator.control.Controller;
 import simulator.misc.Utils;
 
+@SuppressWarnings("serial")
 public class ControlPanel extends JPanel {
 	private Controller _ctrl;
-	private ChangeRegionsDialog _changeRegionsDialog;
 	private JToolBar _toolBar;
+	
 	private JFileChooser _fc;
-	private boolean _stopped = true; // utilizado en los botones de run/stop
-
 	private JButton _loadFileButton;
 	private File _configFile;
 
 	private JButton _mapViewerButton;
 
 	private JButton _changeRegionsButton;
+	private ChangeRegionsDialog _changeRegionsDialog;
 
+	private boolean _stopped = true; // utilizado en los botones de run/stop
 	private JButton _runButton;
 	private JButton _stopButton;
 	private JSpinner _stepsSpinner;
@@ -51,7 +52,6 @@ public class ControlPanel extends JPanel {
 
 	private JButton _quitButton;
 
-	private StatusBar _statusBar;
 
 	public ControlPanel(Controller ctrl) {
 		_ctrl = ctrl;
@@ -116,6 +116,14 @@ public class ControlPanel extends JPanel {
 		this._changeRegionsButton.setToolTipText("Change regions");
 		this._changeRegionsButton.setIcon(new ImageIcon(ICONS.class.getResource("regions.png")));
 		_toolBar.add(this._changeRegionsButton);
+		
+		_changeRegionsDialog = null;
+		_changeRegionsButton.addActionListener((e) -> {
+			if(_changeRegionsDialog == null) {//si es la primera vez que se pulsa creamos uno nuevo
+				_changeRegionsDialog = new ChangeRegionsDialog(_ctrl);				
+			}
+			_changeRegionsDialog.open(ViewUtils.getWindow(ControlPanel.this));
+		});
 
 		// TODO Inicializar _changeRegionsDialog con instancias del di�logo de cambio
 		// de regiones
