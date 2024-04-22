@@ -36,14 +36,14 @@ class MapWindow extends JFrame implements EcoSysObserver {
 		setContentPane(mainPanel);
 		_viewer = new MapViewer();
 		mainPanel.add(_viewer);
-		
+
 		addWindowListener(new WindowListener() {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
 				_ctrl.removeObserver(MapWindow.this);
 			}
-			
+
 			@Override
 			public void windowOpened(WindowEvent e) {
 			}
@@ -67,9 +67,9 @@ class MapWindow extends JFrame implements EcoSysObserver {
 			@Override
 			public void windowClosed(WindowEvent e) {
 			}
-			
+
 		});
-		
+
 		pack();
 		if (_parent != null)
 			setLocation(_parent.getLocation().x + _parent.getWidth() / 2 - getWidth() / 2,

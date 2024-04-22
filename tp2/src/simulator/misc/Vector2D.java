@@ -145,9 +145,7 @@ public class Vector2D {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if ((obj == null) || (getClass() != obj.getClass()))
 			return false;
 		Vector2D other = (Vector2D) obj;
 		if (Double.doubleToLongBits(_x) != Double.doubleToLongBits(other._x))
@@ -158,6 +156,7 @@ public class Vector2D {
 	}
 
 	// return a string representation of the vector
+	@Override
 	public String toString() {
 		return "[" + _x + "," + _y + "]";
 	}

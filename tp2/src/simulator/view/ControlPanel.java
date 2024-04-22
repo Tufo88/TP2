@@ -4,10 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
-
-import icons.ICONS;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -22,19 +18,17 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import examples.EXAMPLES;
+import icons.ICONS;
 import simulator.control.Controller;
-import simulator.misc.Utils;
 
 @SuppressWarnings("serial")
 public class ControlPanel extends JPanel {
 	private Controller _ctrl;
 	private JToolBar _toolBar;
-	
+
 	private JFileChooser _fc;
 	private JButton _loadFileButton;
 	private File _configFile;
@@ -110,17 +104,17 @@ public class ControlPanel extends JPanel {
 		_mapViewerButton.addActionListener((e) -> {
 			new MapWindow(ViewUtils.getWindow(this), _ctrl);
 		});
-		
+
 		// Change regions button
 		this._changeRegionsButton = new JButton();
 		this._changeRegionsButton.setToolTipText("Change regions");
 		this._changeRegionsButton.setIcon(new ImageIcon(ICONS.class.getResource("regions.png")));
 		_toolBar.add(this._changeRegionsButton);
-		
+
 		_changeRegionsDialog = null;
 		_changeRegionsButton.addActionListener((e) -> {
 			if(_changeRegionsDialog == null) {//si es la primera vez que se pulsa creamos uno nuevo
-				_changeRegionsDialog = new ChangeRegionsDialog(_ctrl);				
+				_changeRegionsDialog = new ChangeRegionsDialog(_ctrl);
 			}
 			_changeRegionsDialog.open(ViewUtils.getWindow(ControlPanel.this));
 		});
@@ -136,30 +130,30 @@ public class ControlPanel extends JPanel {
 		this._runButton.setToolTipText("Run simulation");
 		this._runButton.setIcon(new ImageIcon(ICONS.class.getResource("run.png")));
 		_toolBar.add(_runButton);
-		
+
 		_runButton.addActionListener((e) -> {
 			setOtherButtons(false);
 			_stopped = false;
 			try {
-				
+
 				run_sim((int) _stepsSpinner.getValue(), Double.parseDouble(_deltaTimeText.getText()));
 			} catch (NumberFormatException ex) {
 				ViewUtils.showErrorMsg("Delta time is not valid double");
 				setOtherButtons(true);
 				_stopped = true;
 			}
-			
+
 		});
 
 		// stop button
 		_stopButton = new JButton();
 		this._stopButton.setToolTipText("Stop simulation");
 		this._stopButton.setIcon(new ImageIcon(ICONS.class.getResource("stop.png")));
-		
+
 		_stopButton.addActionListener((e) -> {
 			_stopped = true;
 		});
-		
+
 		_toolBar.add(_stopButton);
 		_toolBar.addSeparator();
 
@@ -207,7 +201,7 @@ public class ControlPanel extends JPanel {
 			_stopped = true;
 		}
 	}
-	
+
 	private void setOtherButtons(boolean atrib) {
 		this._loadFileButton.setEnabled(atrib);
 		this._changeRegionsButton.setEnabled(atrib);

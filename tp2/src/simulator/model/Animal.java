@@ -130,6 +130,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 		_pos = _pos.plus(_dest.minus(_pos).direction().scale(speed));
 	}
 
+	@Override
 	public JSONObject as_JSON() {
 		return new JSONObject()
 				.put("pos", new JSONArray().put(this.get_position().getX()).put(this.get_position().getY()))

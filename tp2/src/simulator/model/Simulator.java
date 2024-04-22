@@ -31,8 +31,8 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 		this._animals_factory = animals_factory;
 		this._regions_factory = regions_factory;
 		_reg_mngr = new RegionManager(cols, rows, width, height);
-		_animals = new ArrayList<Animal>();
-		_observers = new ArrayList<EcoSysObserver>();
+		_animals = new ArrayList<>();
+		_observers = new ArrayList<>();
 	}
 
 	public void reset(int cols, int rows, int width, int height) {
@@ -84,7 +84,7 @@ public class Simulator implements JSONable, Observable<EcoSysObserver> {
 		if (_animals.isEmpty())
 			return;
 		Iterator<Animal> i = _animals.iterator();
-		List<Animal> newAnimals = new ArrayList<Animal>();
+		List<Animal> newAnimals = new ArrayList<>();
 		while (i.hasNext()) {
 			Animal a = i.next();
 			if (a.isDead()) {

@@ -8,7 +8,7 @@ import javax.swing.table.AbstractTableModel;
 public class EventsTableModel extends AbstractTableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -31,7 +31,7 @@ public class EventsTableModel extends AbstractTableModel {
 
 	public void reset() {
 		_events.clear();
-		;
+
 		fireTableDataChanged();
 	}
 

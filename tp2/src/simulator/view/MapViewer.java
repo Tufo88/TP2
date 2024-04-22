@@ -1,10 +1,11 @@
 package simulator.view;
 
-import simulator.model.State;
-import simulator.model.AnimalInfo;
-import simulator.model.MapInfo;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -15,6 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import simulator.model.AnimalInfo;
+import simulator.model.MapInfo;
+import simulator.model.State;
 
 @SuppressWarnings("serial")
 public class MapViewer extends AbstractMapViewer {
@@ -84,7 +89,7 @@ public class MapViewer extends AbstractMapViewer {
 					else {
 						int intState = MapViewer.this._currState.ordinal(); //ordinal goes from 0 to n-1
 						if (intState == State.values().length-1) MapViewer.this._currState = null;
-						else MapViewer.this._currState = State.values()[intState+1];						
+						else MapViewer.this._currState = State.values()[intState+1];
 					}
 					repaint();
 				default:
@@ -151,13 +156,13 @@ public class MapViewer extends AbstractMapViewer {
 	private void drawObjects(Graphics2D g, Collection<AnimalInfo> animals, Double time) {
 
 		// TODO Dibujar el grid de regiones
-		//print barras 
+		//print barras
 		g.setColor(Color.LIGHT_GRAY);
 		for (int i = _rwidth; i < _width; i += _rwidth) {
 			g.drawLine(i, 0, i, _height);
 			g.drawLine(0, i, _width, i);
 		}
-		
+
 		// Dibujar los animales
 		for (AnimalInfo a : animals) {
 
@@ -172,9 +177,9 @@ public class MapViewer extends AbstractMapViewer {
 			// color usa ViewUtils.get_color(a.get_genetic_code())
 			if (esp_info == null) {
 				_kindsInfo.put(a.get_genetic_code(), new SpeciesInfo(ViewUtils.get_color(a.get_genetic_code())));
-				
+
 			}
-			
+
 
 			// TODO Incrementar el contador de la especie (es decir el contador dentro de
 			// tag_info)
@@ -188,14 +193,14 @@ public class MapViewer extends AbstractMapViewer {
 			g.fillRoundRect((int) (a.get_position().getX() - (a.get_age()+2)/2), (int)(a.get_position().getY() - (a.get_age()+2)/2), (int)a.get_age()+2, (int)a.get_age()+2, 2, 2);
 
 		}
-		
+
 		int displacement = 0;
 		// TODO Dibujar la etiqueta del estado visible, sin no es null.
 		if (_currState != null) {
 			displacement++;
 			g.setColor(Color.BLUE);
 			this.drawStringWithRect(g, _rwidth/4, _rheight*(_rows-displacement), "State: "+ _currState.name());
-		} 
+		}
 		// TODO Dibujar la etiqueta del tiempo. Para escribir solo 3 decimales puede
 		// usar String.format("%.3f", time)
 		displacement++;
@@ -235,7 +240,7 @@ public class MapViewer extends AbstractMapViewer {
 		this._rows = map.get_rows();
 		this._height = map.get_height();
 		this._width = map.get_width();
-		
+
 		this._rwidth = _width / _cols;
 		this._rheight = _height / _rows;
 		// Esto cambia el tamaño del componente, y así cambia el tamaño de la ventana

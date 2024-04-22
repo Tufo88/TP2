@@ -12,7 +12,7 @@ public abstract class Region implements FoodSupplier, RegionInfo, Entity {
 	protected List<Animal> list;
 
 	public Region() {
-		list = new ArrayList<Animal>();
+		list = new ArrayList<>();
 	}
 
 	final void add_animal(Animal a) {
@@ -31,10 +31,12 @@ public abstract class Region implements FoodSupplier, RegionInfo, Entity {
 		return Collections.unmodifiableList(getAnimals().stream().filter(predicate).toList());
 	}
 
+	@Override
 	public List<AnimalInfo> getAnimalsInfo() {
 		return Collections.unmodifiableList(list);
 	}
 
+	@Override
 	public JSONObject as_JSON() {
 
 		JSONObject obj = new JSONObject();

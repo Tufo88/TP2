@@ -5,11 +5,9 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.Border;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.TableModel;
-
-import extra.jtable.EventsTableModel;
 
 public class InfoTable extends JPanel {
 	String _title;
@@ -27,7 +25,7 @@ public class InfoTable extends JPanel {
 
 		JTable _modelTable = new JTable(_tableModel);
 
-		this.add(new JScrollPane(_modelTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+		this.add(new JScrollPane(_modelTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 	}
 }

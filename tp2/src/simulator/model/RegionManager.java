@@ -65,7 +65,7 @@ public class RegionManager implements AnimalMapView {
 
 		initRegions();
 
-		this._animal_region = new HashMap<Animal, Region>();
+		this._animal_region = new HashMap<>();
 	}
 
 	private void initRegions() {
@@ -180,14 +180,14 @@ public class RegionManager implements AnimalMapView {
 		int maxRangeI = (int) e.get_sight_range() / _region_height;
 		int maxRangeJ = (int) e.get_sight_range() / _region_width;
 
-		List<Animal> a = new ArrayList<Animal>();
+		List<Animal> a = new ArrayList<>();
 
 //		for(RegionData r : this) {
 //			if (r.row() <= regActI + maxRangeI && r.row() >= regActI - maxRangeI && r.col() <= regActJ + maxRangeJ
 //					&& r.col() >= regActJ - maxRangeJ) {
 //				a.addAll(r.r().getAnimals((Animal b) -> e.isInSight(b) && !e.equals(b) && filter.test(b)));
 //			}
-//		} 
+//		}
 		// TODO: PREGUNTAR
 		for (Region[] row : _regions) {
 			for (Region r : row) {

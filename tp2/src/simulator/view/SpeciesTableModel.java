@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -23,9 +22,9 @@ public class SpeciesTableModel extends AbstractTableModel implements EcoSysObser
 
 	SpeciesTableModel(Controller ctrl) {
 		// TODO a lo mejor treeMap?
-		_data = new HashMap<String, Map<State, Integer>>();
+		_data = new HashMap<>();
 
-		columnNames = new ArrayList<String>();
+		columnNames = new ArrayList<>();
 		columnNames.add("Species");
 		for (State st : State.values()) {
 			columnNames.add(st.name());
@@ -97,30 +96,30 @@ public class SpeciesTableModel extends AbstractTableModel implements EcoSysObser
 		for (AnimalInfo a : animals) {
 			updateStateMap(_data.get(a.get_genetic_code()), a);
 		}
-			
+
 	}
 
 	private void clearMap() {
-		
+
 		for (String k : _data.keySet()) {
 			Map<State, Integer> m = _data.get(k);
-			for (State st : State.values()) m.put(st, 0);			
+			for (State st : State.values()) m.put(st, 0);
 		}
-		
+
 	}
-	
-	
+
+
 	private void updateStateMap(Map<State, Integer> info, AnimalInfo i) {
 		if (info == null) { //si no existe el mapa creamos un nuevo mapa que añada todos los posibles estados
-			
-			HashMap<State, Integer> m = new HashMap<State, Integer>();
+
+			HashMap<State, Integer> m = new HashMap<>();
 			for (State st : State.values()) {
 				m.put(st, 0);
 			}
 			_data.put(i.get_genetic_code(), m);
-			
+
 		}
-			
+
 		info = _data.get(i.get_genetic_code());
 		int am = info.get(i.get_state());
 		info.put(i.get_state(), am + 1);

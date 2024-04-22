@@ -210,19 +210,19 @@ public class Main {
 		selection_strategy_builders.add(new SelectClosestBuilder());
 		selection_strategy_builders.add(new SelectYoungestBuilder());
 
-		_selection_strategy_factory = new BuilderBasedFactory<SelectionStrategy>(selection_strategy_builders);
+		_selection_strategy_factory = new BuilderBasedFactory<>(selection_strategy_builders);
 
 		List<Builder<Region>> region_builders = new ArrayList<>();
 		region_builders.add(new DefaultRegionBuilder());
 		region_builders.add(new DynamicSupplyRegionBuilder());
 
-		_regions_factory = new BuilderBasedFactory<Region>(region_builders);
+		_regions_factory = new BuilderBasedFactory<>(region_builders);
 
 		List<Builder<Animal>> animal_builders = new ArrayList<>();
 		animal_builders.add(new SheepBuilder(_selection_strategy_factory));
 		animal_builders.add(new WolfBuilder(_selection_strategy_factory));
 
-		_animals_factory = new BuilderBasedFactory<Animal>(animal_builders);
+		_animals_factory = new BuilderBasedFactory<>(animal_builders);
 
 	}
 

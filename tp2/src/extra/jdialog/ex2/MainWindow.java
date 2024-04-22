@@ -1,8 +1,13 @@
 package extra.jdialog.ex2;
 
-import javax.swing.*;
-
 import java.lang.reflect.InvocationTargetException;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -27,7 +32,7 @@ public class MainWindow extends JFrame {
 
 		_dialog = new JSONBuilderDialog();
 
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.pack();
 		this.setVisible(true);
 	}

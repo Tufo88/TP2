@@ -1,6 +1,9 @@
 package extra.jdialog.ex1;
 
-import javax.swing.JPanel;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.util.List;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -8,10 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.util.List;
+import javax.swing.JPanel;
 
 class DishSelectionDialog extends JDialog {
 

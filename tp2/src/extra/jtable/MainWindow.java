@@ -1,9 +1,9 @@
 package extra.jtable;
 
 import java.awt.BorderLayout;
-import java.awt.Frame;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -15,12 +15,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
-import javax.swing.border.TitledBorder;
+import javax.swing.WindowConstants;
 import javax.swing.border.Border;
-
-import java.lang.reflect.InvocationTargetException;
+import javax.swing.border.TitledBorder;
 
 //Vamos a sacar los datos de un ArrayList en un JTable
 //Para esto necesitamos un modelo de tabla.
@@ -30,7 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 // a JTable
 public class MainWindow extends JFrame {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -63,7 +63,7 @@ public class MainWindow extends JFrame {
 		_time.setPreferredSize(new Dimension(80, 40));
 
 		// combo-box for selecting priority
-		_priotiry = new JComboBox<Integer>();
+		_priotiry = new JComboBox<>();
 		for (int i = 0; i < 10; i++) {
 			_priotiry.addItem(i);
 		}
@@ -93,10 +93,10 @@ public class MainWindow extends JFrame {
 		_model = new EventsTableModel();
 		_eventsTable = new JTable(_model);
 
-		eventsPanel.add(new JScrollPane(_eventsTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+		eventsPanel.add(new JScrollPane(_eventsTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setSize(700, 300);
 		pack();
 		setVisible(true);
@@ -110,7 +110,7 @@ public class MainWindow extends JFrame {
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog( //
-					(Frame) SwingUtilities.getWindowAncestor(this), //
+					SwingUtilities.getWindowAncestor(this), //
 					"Something went wrong ...", "ERROR", //
 					JOptionPane.ERROR_MESSAGE);
 		}

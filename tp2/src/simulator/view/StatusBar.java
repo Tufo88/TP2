@@ -7,6 +7,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
 import simulator.control.Controller;
 import simulator.model.AnimalInfo;
@@ -27,7 +28,7 @@ public class StatusBar extends JPanel implements EcoSysObserver {
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));
 		this.setBorder(BorderFactory.createBevelBorder(1));
 
-		JSeparator s = new JSeparator(JSeparator.VERTICAL);
+		JSeparator s = new JSeparator(SwingConstants.VERTICAL);
 
 		_timeText = new JLabel("Time :");
 		_totalAnimalsText = new JLabel("Total Animals: ");

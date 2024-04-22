@@ -1,11 +1,8 @@
 package extra.jdialog.ex2;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -14,7 +11,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 class JSONBuilderDialog extends JDialog {
 
@@ -75,8 +78,8 @@ class JSONBuilderDialog extends JDialog {
 				return component;
 			}
 		};
-		JScrollPane tabelScroll = new JScrollPane(dataTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane tabelScroll = new JScrollPane(dataTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		mainPanel.add(tabelScroll);
 
 		mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -90,7 +93,7 @@ class JSONBuilderDialog extends JDialog {
 		DefaultComboBoxModel<String> dataSelectorModel = new DefaultComboBoxModel<>();
 		for (int i = 0; i < _jsonSrc.length; i++)
 			dataSelectorModel.addElement("DATA-" + i);
-		JComboBox<String> dataSelector = new JComboBox<String>(dataSelectorModel);
+		JComboBox<String> dataSelector = new JComboBox<>(dataSelectorModel);
 		dataSelector.addActionListener((e) -> {
 			updateTableModel(dataSelector.getSelectedIndex());
 		});

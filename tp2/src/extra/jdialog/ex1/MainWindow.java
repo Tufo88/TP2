@@ -1,10 +1,15 @@
 package extra.jdialog.ex1;
 
-import javax.swing.*;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -29,7 +34,7 @@ public class MainWindow extends JFrame {
 
 		_dialog = new DishSelectionDialog();
 
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.pack();
 		this.setVisible(true);
 
@@ -37,7 +42,7 @@ public class MainWindow extends JFrame {
 
 	protected void select_food() {
 
-		List<Dish> dishes = new ArrayList<Dish>();
+		List<Dish> dishes = new ArrayList<>();
 		for (int i = 0; i < 10; i++) {
 			dishes.add(new Dish("Yum Yum " + i));
 		}
