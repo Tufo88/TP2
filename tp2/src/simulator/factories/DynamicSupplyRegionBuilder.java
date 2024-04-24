@@ -20,7 +20,7 @@ public class DynamicSupplyRegionBuilder extends Builder<Region> {
 		double factor = data.optDouble("factor", _DEFAULT_FACTOR);
 		double food = data.optDouble("food", _DEFAULT_FOOD);
 
-		return new DynamicSupplyRegion(factor, food);
+		return new DynamicSupplyRegion(food, factor);
 	}
 
 	@Override

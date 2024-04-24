@@ -51,10 +51,12 @@ public class Main {
 			_desc = modeDesc;
 		}
 
+		@SuppressWarnings("unused")
 		public String get_tag() {
 			return _tag;
 		}
 
+		@SuppressWarnings("unused")
 		public String get_desc() {
 			return _desc;
 		}

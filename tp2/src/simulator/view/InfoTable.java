@@ -9,6 +9,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.TableModel;
 
+@SuppressWarnings("serial")
 public class InfoTable extends JPanel {
 	String _title;
 	TableModel _tableModel;

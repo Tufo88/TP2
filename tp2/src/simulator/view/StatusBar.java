@@ -15,6 +15,7 @@ import simulator.model.EcoSysObserver;
 import simulator.model.MapInfo;
 import simulator.model.RegionInfo;
 
+@SuppressWarnings("serial")
 public class StatusBar extends JPanel implements EcoSysObserver {
 	private JLabel _timeText, _totalAnimalsText, _dimensionsText;
 	private JLabel _actualTime, _actualAnimals, _actualDimensions;
@@ -53,8 +54,7 @@ public class StatusBar extends JPanel implements EcoSysObserver {
 
 	@Override
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
-		this._actualTime.setText(String.format("%.2f", time));
-		this._actualAnimals.setText(String.valueOf(animals.size()));
+		setTimeAndAnimals(time, animals);
 		this._actualDimensions.setText(
 				String.format("%dx%d %dx%d", map.get_width(), map.get_height(), map.get_rows(), map.get_cols()));
 	}
@@ -67,8 +67,7 @@ public class StatusBar extends JPanel implements EcoSysObserver {
 
 	@Override
 	public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
-		this._actualTime.setText(String.format("%.2f", time));
-		this._actualAnimals.setText(String.valueOf(animals.size()));
+		setTimeAndAnimals(time, animals);
 	}
 
 	@Override
@@ -78,7 +77,13 @@ public class StatusBar extends JPanel implements EcoSysObserver {
 
 	@Override
 	public void onAdvance(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
+		setTimeAndAnimals(time, animals);
+	}
+
+	private void setTimeAndAnimals(double time, List<AnimalInfo> animals) {
 		this._actualTime.setText(String.format("%.2f", time));
 		this._actualAnimals.setText(String.valueOf(animals.size()));
 	}
+	
+	
 }

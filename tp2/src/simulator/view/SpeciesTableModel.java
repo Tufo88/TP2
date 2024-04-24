@@ -21,7 +21,6 @@ public class SpeciesTableModel extends AbstractTableModel implements EcoSysObser
 	private static List<String> columnNames;
 
 	SpeciesTableModel(Controller ctrl) {
-		// TODO a lo mejor treeMap?
 		_data = new HashMap<>();
 
 		columnNames = new ArrayList<>();
@@ -103,14 +102,15 @@ public class SpeciesTableModel extends AbstractTableModel implements EcoSysObser
 
 		for (String k : _data.keySet()) {
 			Map<State, Integer> m = _data.get(k);
-			for (State st : State.values()) m.put(st, 0);
+			for (State st : State.values())
+				m.put(st, 0);
 		}
 
 	}
 
-
 	private void updateStateMap(Map<State, Integer> info, AnimalInfo i) {
-		if (info == null) { //si no existe el mapa creamos un nuevo mapa que añada todos los posibles estados
+		if (info == null) { // si no existe el mapa creamos un nuevo mapa que añada todos los posibles
+							// estados
 
 			HashMap<State, Integer> m = new HashMap<>();
 			for (State st : State.values()) {

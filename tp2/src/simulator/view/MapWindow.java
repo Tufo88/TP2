@@ -16,6 +16,7 @@ import simulator.model.EcoSysObserver;
 import simulator.model.MapInfo;
 import simulator.model.RegionInfo;
 
+@SuppressWarnings("serial")
 class MapWindow extends JFrame implements EcoSysObserver {
 	private Controller _ctrl;
 	private AbstractMapViewer _viewer;
@@ -72,40 +73,44 @@ class MapWindow extends JFrame implements EcoSysObserver {
 
 		pack();
 		if (_parent != null)
-			setLocation(_parent.getLocation().x + _parent.getWidth() / 2 - getWidth() / 2,
-					_parent.getLocation().y + _parent.getHeight() / 2 - getHeight() / 2);
+			setLocation(_parent.getLocation().x + _parent.getWidth() + 10, _parent.getLocation().y);
 		setResizable(false);
 		setVisible(true);
 	}
 
 	@Override
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
-		SwingUtilities.invokeLater(() -> { _viewer.reset(time, map, animals); pack(); });
+		SwingUtilities.invokeLater(() -> {
+			_viewer.reset(time, map, animals);
+			pack();
+		});
 
 	}
 
 	@Override
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
-		SwingUtilities.invokeLater(() -> { _viewer.reset(time, map, animals); pack(); });
+		SwingUtilities.invokeLater(() -> {
+			_viewer.reset(time, map, animals);
+			pack();
+		});
 
 	}
 
 	@Override
 	public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
-		// TODO Auto-generated method stub
-
+		return;
 	}
 
 	@Override
 	public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
-		// TODO Auto-generated method stub
-
+		return;
 	}
 
 	@Override
 	public void onAdvance(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
-		SwingUtilities.invokeLater(() -> { _viewer.update(animals, time); });
+		SwingUtilities.invokeLater(() -> {
+			_viewer.update(animals, time);
+		});
 
 	}
-// TODO otros métodos van aquí….
 }

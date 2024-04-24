@@ -46,7 +46,6 @@ public class ControlPanel extends JPanel {
 
 	private JButton _quitButton;
 
-
 	public ControlPanel(Controller ctrl) {
 		_ctrl = ctrl;
 		initGUI();
@@ -98,7 +97,7 @@ public class ControlPanel extends JPanel {
 		// Map viewer button
 		this._mapViewerButton = new JButton();
 		this._mapViewerButton.setToolTipText("Show Map");
-		this._mapViewerButton.setIcon(new ImageIcon(ICONS.class.getResource("viewer.png")));
+		this._mapViewerButton.setIcon(new ImageIcon(ICONS.class.getResource("viewer.png"))); //es necesario añadir resources como source folder con la clase ICONS
 		_toolBar.add(this._mapViewerButton);
 
 		_mapViewerButton.addActionListener((e) -> {
@@ -113,14 +112,11 @@ public class ControlPanel extends JPanel {
 
 		_changeRegionsDialog = null;
 		_changeRegionsButton.addActionListener((e) -> {
-			if(_changeRegionsDialog == null) {//si es la primera vez que se pulsa creamos uno nuevo
+			if (_changeRegionsDialog == null) {// si es la primera vez que se pulsa creamos uno nuevo
 				_changeRegionsDialog = new ChangeRegionsDialog(_ctrl);
 			}
 			_changeRegionsDialog.open(ViewUtils.getWindow(ControlPanel.this));
 		});
-
-		// TODO Inicializar _changeRegionsDialog con instancias del di�logo de cambio
-		// de regiones
 
 		_toolBar.add(Box.createGlue()); // this aligns the button to the right
 		_toolBar.addSeparator();

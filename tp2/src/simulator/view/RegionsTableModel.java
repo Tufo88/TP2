@@ -104,19 +104,20 @@ public class RegionsTableModel extends AbstractTableModel implements EcoSysObser
 		int i = 0;
 
 		Iterator<RegionData> it = map.iterator();
-		while (it.hasNext() && !it.next().r().getAnimalsInfo().contains(a)) { //sale cuando lo encontremos
+		while (it.hasNext() && !it.next().r().getAnimalsInfo().contains(a)) { // sale cuando lo encontremos
 			i++;
 		}
 
-		Info info = _cells.get(i); //suponemos que todo animal que busquemos lo encontraremos porque no tendria sentido que no lo encontrasemos
-		int actualAmount =  info.map.get(a.get_diet());
+		Info info = _cells.get(i); // suponemos que todo animal que busquemos lo encontraremos porque no tendria
+									// sentido que no lo encontrasemos
+		int actualAmount = info.map.get(a.get_diet());
 		info.map.put(a.get_diet(), actualAmount + 1);
 	}
 
 	@Override
 	public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
 
-		int pos = this._syscols*row + col;
+		int pos = this._syscols * row + col;
 		Info info = new Info(r.toString(), new HashMap<>());
 
 		_cells.set(pos, info);
@@ -161,8 +162,8 @@ public class RegionsTableModel extends AbstractTableModel implements EcoSysObser
 	private void insertAnimalsinMap(int i, List<AnimalInfo> animals) {
 		for (AnimalInfo a : animals) {
 
-			int num =_cells.get(i).map().get(a.get_diet());
-			_cells.get(i).map().put(a.get_diet(), num+1);
+			int num = _cells.get(i).map().get(a.get_diet());
+			_cells.get(i).map().put(a.get_diet(), num + 1);
 
 		}
 	}

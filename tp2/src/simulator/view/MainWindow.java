@@ -2,6 +2,7 @@ package simulator.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -11,6 +12,7 @@ import javax.swing.JPanel;
 
 import simulator.control.Controller;
 
+@SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 	private Controller _ctrl;
 
@@ -21,6 +23,10 @@ public class MainWindow extends JFrame {
 	}
 
 	private void initGUI() {
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+		setLocation((int) (0.1 * screenSize.getWidth() + 20), (int) (0.15 * screenSize.getHeight() + 20));
+
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		setContentPane(mainPanel);
 		mainPanel.add(new ControlPanel(_ctrl), BorderLayout.PAGE_START);

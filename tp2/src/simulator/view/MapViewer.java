@@ -85,11 +85,12 @@ public class MapViewer extends AbstractMapViewer {
 					// viene el primero de Animal.State.values() y después del último viene null.
 					if (MapViewer.this._currState == null) {
 						MapViewer.this._currState = State.values()[0];
-					}
-					else {
-						int intState = MapViewer.this._currState.ordinal(); //ordinal goes from 0 to n-1
-						if (intState == State.values().length-1) MapViewer.this._currState = null;
-						else MapViewer.this._currState = State.values()[intState+1];
+					} else {
+						int intState = MapViewer.this._currState.ordinal(); // ordinal goes from 0 to n-1
+						if (intState == State.values().length - 1)
+							MapViewer.this._currState = null;
+						else
+							MapViewer.this._currState = State.values()[intState + 1];
 					}
 					repaint();
 				default:
@@ -140,8 +141,8 @@ public class MapViewer extends AbstractMapViewer {
 		// s: show animals of a specific state
 		if (_showHelp) {
 			gr.setColor(Color.RED);
-			gr.drawString("h: toggle help", _rwidth/4, _rheight/4);
-			gr.drawString("s: show animals of a specific state", _rwidth/4, 2*_rheight/4) ;
+			gr.drawString("h: toggle help", _rwidth / 4, _rheight / 4);
+			gr.drawString("s: show animals of a specific state", _rwidth / 4, 2 * _rheight / 4);
 		}
 
 	}
@@ -156,7 +157,7 @@ public class MapViewer extends AbstractMapViewer {
 	private void drawObjects(Graphics2D g, Collection<AnimalInfo> animals, Double time) {
 
 		// TODO Dibujar el grid de regiones
-		//print barras
+		// print barras
 		g.setColor(Color.LIGHT_GRAY);
 		for (int i = _rwidth; i < _width; i += _rwidth) {
 			g.drawLine(i, 0, i, _height);
@@ -180,7 +181,6 @@ public class MapViewer extends AbstractMapViewer {
 
 			}
 
-
 			// TODO Incrementar el contador de la especie (es decir el contador dentro de
 			// tag_info)
 			esp_info = _kindsInfo.get(a.get_genetic_code());
@@ -190,7 +190,9 @@ public class MapViewer extends AbstractMapViewer {
 			// tag_info._color. Su tamaño tiene que ser relativo a su edad, por ejemplo
 			// edad/2+2. Se puede dibujar usando fillRoundRect, fillRect o fillOval.
 			g.setColor(esp_info._color);
-			g.fillRoundRect((int) (a.get_position().getX() - (a.get_age()+2)/2), (int)(a.get_position().getY() - (a.get_age()+2)/2), (int)a.get_age()+2, (int)a.get_age()+2, 2, 2);
+			g.fillRoundRect((int) (a.get_position().getX() - (a.get_age() + 2) / 2),
+					(int) (a.get_position().getY() - (a.get_age() + 2) / 2), (int) a.get_age() + 2,
+					(int) a.get_age() + 2, 2, 2);
 
 		}
 
@@ -199,20 +201,23 @@ public class MapViewer extends AbstractMapViewer {
 		if (_currState != null) {
 			displacement++;
 			g.setColor(Color.BLUE);
-			this.drawStringWithRect(g, _rwidth/4, _rheight*(_rows-displacement), "State: "+ _currState.name());
+			this.drawStringWithRect(g, _rwidth / 4, _rheight * (_rows - displacement), "State: " + _currState.name());
 		}
 		// TODO Dibujar la etiqueta del tiempo. Para escribir solo 3 decimales puede
 		// usar String.format("%.3f", time)
 		displacement++;
 		g.setColor(Color.PINK);
-		this.drawStringWithRect(g, _rwidth/4, _rheight*(_rows-displacement)+ _rheight/2*(displacement-1), String.format("Time: %.3f", time));
+		this.drawStringWithRect(g, _rwidth / 4, _rheight * (_rows - displacement) + _rheight / 2 * (displacement - 1),
+				String.format("Time: %.3f", time));
 		// TODO Dibujar la información de todas la especies. Al final de cada
 		// iteración
 		// poner el contador de la especie correspondiente a 0 (para resetear el cuento)
 		for (Entry<String, SpeciesInfo> e : _kindsInfo.entrySet()) {
 			displacement++;
 			g.setColor(e.getValue()._color);
-			this.drawStringWithRect(g, _rwidth/4, _rheight*(_rows-displacement)+ _rheight/2*(displacement-1), e.getKey() + ": " + e.getValue()._count.toString());
+			this.drawStringWithRect(g, _rwidth / 4,
+					_rheight * (_rows - displacement) + _rheight / 2 * (displacement - 1),
+					e.getKey() + ": " + e.getValue()._count.toString());
 			e.getValue()._count = 0;
 		}
 	}
