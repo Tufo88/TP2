@@ -112,6 +112,7 @@ public class RegionsTableModel extends AbstractTableModel implements EcoSysObser
 									// sentido que no lo encontrasemos
 		int actualAmount = info.map.get(a.get_diet());
 		info.map.put(a.get_diet(), actualAmount + 1);
+		fireTableDataChanged();
 	}
 
 	@Override
